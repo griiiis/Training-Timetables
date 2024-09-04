@@ -3,15 +3,12 @@ using App.Contracts.BLL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Identity;
-using App.DTO.v1_0;
 using App.DTO.v1_0.Identity;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApp.Areas.ContestAdmin.ViewModels;
 using WebApp.Helpers;
 using AppUser = App.Domain.Identity.AppUser;
 

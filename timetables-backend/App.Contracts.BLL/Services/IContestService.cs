@@ -1,4 +1,5 @@
-﻿using App.Contracts.DAL.Repositories;
+﻿using App.BLL.DTO.Models;
+using App.Contracts.DAL.Repositories;
 using Base.Contracts.BLL;
 using Base.Contracts.DAL;
 
@@ -9,5 +10,9 @@ public interface IContestService : IEntityService<App.BLL.DTO.Contest>, IContest
     App.BLL.DTO.Contest AddContestWithUser(Guid userId, App.BLL.DTO.Contest contest);
     bool IsContestOwnedByUser (Guid userId, Guid contestId);
     App.BLL.DTO.Contest UpdateContestWithUser(Guid userId, App.BLL.DTO.Contest contest);
-    
+    Task<App.BLL.DTO.Models.ContestEditModel> GetContestEditModel(Guid userId, Guid id);
+    Task PutContest(Guid userId, Guid id, ContestEditModel contest);
+    Task<App.BLL.DTO.Contest> PostContest(Guid userId, ContestEditModel contest);
+
+
 }
