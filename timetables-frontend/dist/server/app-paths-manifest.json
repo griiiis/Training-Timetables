@@ -1,0 +1,10 @@
+{
+  "/not-found": "app/not-found.js",
+  "/Contest/page": "app/Contest/page.js",
+  "/login/page": "app/login/page.js",
+  "/Contest/Details/[id]/page": "app/Contest/Details/[id]/page.js",
+  "/Contest/Create/page": "app/Contest/Create/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/Contest/Delete/[id]/page": "app/Contest/Delete/[id]/page.js",
+  "/page": "app/page.js"
+}

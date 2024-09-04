@@ -1,0 +1,229 @@
+
+@using Newtonsoft.Json
+@using WebApp.Areas.ContestAdmin.ViewModels
+@model WebApp.Areas.ContestAdmin.ViewModels.GameCreateEditViewModel
+
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.Games;
+}
+
+<h1 class="middle">Create New Game</h1>
+
+<input type="hidden" id="pplCount" value="@JsonConvert.SerializeObject(Model.PeopleCountPerGameType)"/>
+
+<hr/>
+<div class="row">
+    <div class="">
+        <input type="hidden" id="contest-times" value="@JsonConvert.SerializeObject(Model.Times)"/>
+        <form id="gameForm" asp-action="Create">
+            <input type="hidden" asp-for="Contest.Id" value="@Model.Contest.Id.ToString()"/>
+            <div class="container">
+                <div class="row row-cols-@(Model.GameTypes.Count)">
+                    @for (int i = 0; i < Model.GameTypes.Count; i++)
+                    {
+                        Model.GameTypesModel.Add(new GameTypeViewModel());
+                        <input type="text" asp-for="GameTypesModel[i].GameTypeId" class="form-control" hidden="hidden" value="@Model.GameTypes[i].Id">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <input type="hidden" id="pplCount_@Model.GameTypes[i].Id" value="@JsonConvert.SerializeObject(Model.UsersWithoutTrainers.Count(u => u.Team!.GameTypeId == Model.GameTypes[i].Id))"/>
+                                    <h5 class="card-title">@Model.GameTypes[i].GameTypeName</h5>
+                                    <p class="card-text">Teams Count: @Model.Teams.Count(g => g.GameTypeId == Model.GameTypes[i].Id)</p>
+                                    <p class="card-text">People Count: @Model.UsersWithoutTrainers.Count(u => u.Team!.GameTypeId == Model.GameTypes[i].Id)</p>
+                                    <div id="peoplePerCourt_@Model.GameTypes[i].Id">Currently People Per Court: <span id="peoplePerCourtValue">0</span></div>
+                                    <br/>
+                                    <div class="form-group">
+                                        <label class="control-label">People per court:</label>
+                                        <input type="number" id="numberInput" asp-for="GameTypesModel[i].PeopleOnCourt" class="form-control" min="0" max="100">
+                                    </div>
+                                    <br/>
+                                    <div class="form-group">
+                                        <label class="control-label">Levels</label>
+                                        <select class="form-control" asp-for="GameTypesModel[i].SelectedLevelsList" asp-items="@Model.LevelsSelectList" multiple="multiple"></select>
+                                    </div>
+                                    <br/>
+                                    <div class="form-group">
+                                        <label class="control-label">Courts</label>
+                                        @{
+                                            var allCourtsSelectList = Model.Courts.Where(g => g.GameTypeId == Model.GameTypes[i].Id).Select(c => new SelectListItem { Text = c.CourtName, Value = c.Id.ToString(), Selected = false }).ToList();
+                                        }
+                                        <select id="selectCourts_@Model.GameTypes[i].Id" class="form-control" asp-for="GameTypesModel[i].SelectedCourtsList" asp-items="allCourtsSelectList" multiple="multiple"></select>
+                                    </div>
+                                    <br/>
+                                    <div class="form-group">
+                                        <label class="card-text">Trainers</label>
+                                        @{
+                                            var gameTypeTeachers = Model.Trainers
+                                                .Where(e => e.AppUser!.RolePreferences!
+                                                    .Any(c => c.ContestId.Equals(Model.Contest.Id) && c.GameTypeId.Equals(Model.GameTypes[i].Id)))
+                                                .ToList()
+                                                .Select(r => new SelectListItem() { Text = r.AppUser!.FirstName + " " + r.AppUser.LastName, Value = r.Id.ToString() });
+                                            <select class="form-control" asp-for="GameTypesModel[i].SelectedTeachersList" asp-items="gameTypeTeachers" multiple="multiple"></select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br/>
+            <div class="container">
+                <div class="row row-cols-6">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="control-label">@App.Resources.Domain.Game.From</label>
+                            <input id="startDate" type="date" min="@Model.Contest.From.ToString("yyyy-MM-dd")" max="@Model.Contest.Until.ToString("yyyy-MM-dd")" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="control-label">@App.Resources.Domain.Game.Until</label>
+                            <input id="endDate" type="date" min="@Model.Contest.From.ToString("yyyy-MM-dd")" max="@Model.Contest.Until.ToString("yyyy-MM-dd")" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row row-cols-3" id="generatedBoxes"></div>
+                <input type="hidden" asp-for="SelectedTimes" id="selectedTimes" value="">
+                <br/>
+                <div class="form-group">
+                    <input type="submit" value="@App.Resources.Views.Shared._Layout.Create" class="btn btn-primary"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<div>
+    <a asp-controller="Contests" asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+    document.getElementById('endDate').addEventListener('change', function() {
+        let startDate = new Date(document.getElementById('startDate').value);
+        let endDate = new Date(this.value);
+        endDate.setDate(endDate.getDate() + 1);
+        let differenceInTime = endDate.getTime() - startDate.getTime();
+        let differenceInDays = differenceInTime / (1000 * 3600 * 24);
+        let generatedBoxes = document.getElementById('generatedBoxes');
+
+        // Clear previous boxes
+        generatedBoxes.innerHTML = '';
+        
+        let times = JSON.parse(document.getElementById("contest-times").value);
+
+        let selectElements = []; // Salvestame kõik select elemendid
+
+        // Generate boxes
+        for (let i = 0; i < differenceInDays; i++) {
+            let box = document.createElement('div');
+            box.classList.add('form-group');
+            box.innerHTML =
+                '<label class="control-label">Day ' + (i + 1) + '</label>' +
+                '<input hidden="hidden" id="TimeNum_' + i + '" value="' + (i + 1) + '">' +
+                '<select id="selectTime_' + i + '" class="form-control times-select" multiple="multiple"></select>';
+            
+            let selectTimesElement = box.querySelector('.times-select');
+
+            // Add options to select Times element
+            times.forEach(function(time) {
+                let option = document.createElement('option');
+                option.text = time.From.toString() + ' - ' + time.Until.toString();
+                option.value = time.Id;
+                option.selected = true; // Määrame kõik valikud vaikimisi valitud
+                selectTimesElement.appendChild(option);
+            });
+            generatedBoxes.appendChild(box);
+            selectElements.push(selectTimesElement);
+        }
+        selectElements.forEach(function(selectElement) {
+            selectElement.addEventListener("change", function() {
+                updateTimeCount(selectElements);
+            });
+        });
+        updateTimeCount(selectElements);
+    });
+    
+    function updateTimeCount(selectElements) {
+        var totalSelectedOptions = 0;
+
+        // Arvutame kõigi select elementide valitud valikute summa
+        selectElements.forEach(function(selectElement) {
+            totalSelectedOptions += selectElement.selectedOptions.length;
+        });
+        updateCounts(null, selectElements);
+    }
+    
+    document.getElementById('gameForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        let selectedTimesByDay = {};
+        
+        let timesSelects = document.querySelectorAll('.times-select');
+        
+        timesSelects.forEach((select, index) => {
+            let startDate = new Date(document.getElementById('startDate').value);
+            startDate.setDate(startDate.getDate() + index);
+            let date = startDate.toISOString().split('T')[0];
+            let dayIndex = select.dataset.dayIndex;
+            let selectedTimesOptions = Array.from(timesSelects[index].selectedOptions).map(option => option.value);
+            
+            if (!selectedTimesByDay[dayIndex]) {
+                selectedTimesByDay[dayIndex] = [];
+            }
+            
+            selectedTimesByDay[dayIndex].push({
+                Date: date,
+                SelectedTimesList: selectedTimesOptions
+            });
+        });
+        document.getElementById('selectedTimes').value = JSON.stringify(selectedTimesByDay);;
+        document.getElementById('gameForm').submit();
+    });
+
+    // Leia kõik select elemendid ja lisa neile event listenerid
+    var selectElements = document.querySelectorAll('[id^="selectCourts_"]');
+    selectElements.forEach(function(selectElement) {
+        selectElement.addEventListener("change", function() {
+            
+            let selectId = this.id;
+            updateCounts(selectId, null);
+        });
+    });
+
+    let timeCount;
+    let courtCount = 0;
+    function updateCounts(selectId, selectElements) {
+        let totalSelectedOptions = 0;
+        
+        if (selectElements != null){
+            selectElements.forEach(function(selectElement) {
+                totalSelectedOptions += selectElement.selectedOptions.length;
+                timeCount = totalSelectedOptions;
+            });
+        }
+        let pplCounts = JSON.parse(document.getElementById("pplCount").value);
+        
+        let peoplePerCourt = 0;
+        
+        for (const pplkey in pplCounts) {
+            let peoplePerCourtValue = "peoplePerCourt_" + pplkey;
+            let divElement = document.getElementById(peoplePerCourtValue);
+            
+            if (selectId.split("_")[1] === pplkey){
+                var selectElement = document.getElementById(selectId);
+                var selectedOptions = selectElement.selectedOptions;
+                courtCount = selectedOptions.length;
+                if (timeCount !== undefined){
+                    peoplePerCourt = pplCounts[pplkey] / (timeCount * courtCount);
+                }
+
+                divElement.innerHTML = "Currently People Per Court: " + peoplePerCourt;
+            }
+        }
+    }
+</script>
+}

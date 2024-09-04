@@ -1,0 +1,23 @@
+@model App.BLL.DTO.Location
+
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.Location;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Create @App.Resources.Views.Shared._Layout.New @App.Resources.Views.Shared._Layout.Location</h1>
+
+<hr/>
+<form asp-action="Create">
+    <partial name="_CreateEdit" model="Model"/>
+    <div class="form-group">
+        <input type="submit" value="@App.Resources.Views.Shared._Layout.Create" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

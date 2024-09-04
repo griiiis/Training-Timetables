@@ -1,0 +1,42 @@
+@model App.BLL.DTO.PackageGameTypeTime
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Package;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Delete @App.Resources.Views.Shared._Layout.Package</h1>
+
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <dl class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.PackageGtName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.PackageGtName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.GameType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.GameType!.GameTypeName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Times)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Times)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </dl>
+        <input type="submit" value="@App.Resources.Views.Shared._Layout.Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+    </form>
+</div>

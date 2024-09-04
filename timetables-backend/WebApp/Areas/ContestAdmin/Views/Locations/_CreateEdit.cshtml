@@ -1,0 +1,28 @@
+﻿@model App.BLL.DTO.Location
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<br/>
+<div class="mb-3 row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="LocationName" class="control-label"></label>
+                <input asp-for="LocationName" class="form-control" required="required"/>
+                <span asp-validation-for="LocationName" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" required="required"/>
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <input asp-for="Country" class="form-control" required="required" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>

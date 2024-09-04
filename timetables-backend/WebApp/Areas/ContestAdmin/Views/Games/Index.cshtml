@@ -1,0 +1,90 @@
+@model WebApp.Areas.ContestAdmin.ViewModels.GameIndexViewModel
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Games;
+}
+
+@{
+
+
+    <h1 class="middle">@Model.Contest.ContestName @App.Resources.Views.Shared._Layout.Games</h1>
+    <br/>
+
+<div class="container">
+    @foreach (var day in Model.Days)
+    {
+        // Kontrollime, kas sellel päeval on mänge olemas
+        var gamesForDay = Model.Games.Any(e => DateOnly.FromDateTime(e.From.ToLocalTime()).Equals(DateOnly.FromDateTime(day)));
+
+        if (gamesForDay)
+        {
+            <hr/>
+            <div class="row">
+                <div class="col">
+                    <h1>@DateOnly.FromDateTime(day)</h1>
+                    <br/>
+                </div>
+            </div>
+
+            foreach (var time in Model.Times)
+            {
+                // Kontrollime, kas sellel päeval ja ajal on mänge olemas
+                var gamesForTime = Model.Games.Any(e => TimeOnly.FromDateTime(e.From.ToLocalTime()).Equals(time.From)
+                                                        && DateOnly.FromDateTime(e.From.ToLocalTime()).Equals(DateOnly.FromDateTime(day)));
+
+                if (gamesForTime)
+                {
+                    <div class="row">
+                        <div class="col">
+                            <h2>@time.From - @time.Until</h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @foreach (var gameType in Model.GameTypes)
+                        {
+                            var gamesOfType = Model.Games.Where(e => TimeOnly.FromDateTime(e.From.ToLocalTime()).Equals(time.From)
+                                                                     && DateOnly.FromDateTime(e.From.ToLocalTime()).Equals(DateOnly.FromDateTime(day))
+                                                                     && e.GameTypeId.Equals(gameType.Id)).OrderBy(e => e.Court!.CourtName.ToString()).ToList();
+
+                            if (gamesOfType.Any())
+                            {
+                                <div class="col-md-4">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h3 class="card-title">@gameType.GameTypeName</h3>
+
+                                            @foreach (var game in gamesOfType)
+                                            {
+                                                <div class="game-details">
+                                                    <h4>@game.Court!.CourtName - @game.Level!.Title </h4>
+
+                                                    <p>
+                                                        @{ var trainers = string.Join(", ", Model.Teachers
+                                                               .Where(e => e.Team!.TeamGames!
+                                                                   .Any(g => g.GameId
+                                                                       .Equals(game.Id)))
+                                                               .Select(c => $"{c!.AppUser!.FirstName} {c.AppUser.LastName}")); }
+                                                        <b>Trainer: </b>@(trainers)
+                                                    </p>
+                                                    <p>
+                                                        <b>Players:</b> @string.Join(", ", Model.Games.Where(e => e.Id.Equals(game.Id))
+                                                                            .SelectMany(e => e.TeamGames!
+                                                                                .Where(t=> t.Team!.UserContestPackages!
+                                                                                    .All(a => !Model.TeacherIds.Contains(a.AppUserId))))
+                                                                            .SelectMany(t => t.Team!.UserContestPackages!)
+                                                                            .Select(u => $"{u.AppUser!.FirstName} {u.AppUser!.LastName}"));
+                                                    </p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+        }
+    }
+</div>}

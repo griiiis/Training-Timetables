@@ -1,0 +1,75 @@
+@model App.BLL.DTO.Contest
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Contest;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Delete @App.Resources.Views.Shared._Layout.Contest</h1>
+
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <dl class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <dt class="col-sm-4">
+                            @App.Resources.Domain.Contest.ContestName
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.ContestName
+                        </dd>
+                        <dt class="col-sm-4">
+                            @App.Resources.Domain.Contest.Description
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Description
+                        </dd>
+                        <dt class="col-sm-4">
+                            @App.Resources.Domain.Contest.From
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.From)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @App.Resources.Domain.Contest.Until
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Until)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.TotalHours)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.TotalHours)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.ContestType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ContestType!.ContestTypeName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Location)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Location!.LocationName)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </dl>
+        <div class="middle">
+
+            <input type="submit" value="Delete" class="btn btn-danger middle" /> <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+        </div>
+    </form>
+</div>

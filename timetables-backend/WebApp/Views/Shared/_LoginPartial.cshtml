@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using App.Domain.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@if (SignInManager.IsSignedIn(User))
+{
+    var appUser = await UserManager.GetUserAsync(User);
+
+    <li class="text-end d-flex align-items-center">
+        <partial name="_LanguageSelectionPartial"/>
+        <a class="btn btn-outline-light me-2" asp-area="Identity" asp-page="/Account/Manage/Index" title="Account">
+            @App.Resources.Views.Shared._Layout.Hello @appUser!.FirstName @appUser.LastName!
+        </a>
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Contests", new { area = "" })">
+            <button type="submit" class="btn btn-outline-light me-2">@App.Resources.Views.Shared._Layout.Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <div class="text-end">
+        <partial name="_LanguageSelectionPartial"/>
+        <a class="btn btn-outline-light me-2" asp-area="Identity" asp-page="/Account/Login">@App.Resources.Views.Shared._Layout.Login</a>
+        <a class="btn btn-warning" asp-area="Identity" asp-page="/Account/Register">@App.Resources.Views.Shared._Layout.SignUp</a>
+    </div>
+}

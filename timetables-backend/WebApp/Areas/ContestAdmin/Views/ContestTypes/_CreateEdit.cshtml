@@ -1,0 +1,21 @@
+﻿@model App.BLL.DTO.ContestType
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<br/>
+<div class="mb-3 row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="ContestTypeName" class="control-label">@App.Resources.Domain.ContestType.ContestTypeName</label>
+                <input asp-for="ContestTypeName" class="form-control" required="required"/>
+                <span asp-validation-for="ContestTypeName" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">@App.Resources.Domain.ContestType.Description</label>
+                <input asp-for="Description" class="form-control" required="required"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>

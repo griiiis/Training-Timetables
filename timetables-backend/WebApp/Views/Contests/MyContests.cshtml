@@ -1,0 +1,213 @@
+﻿@model WebApp.ViewModels.ContestMyContestsViewModel
+
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.Contests;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.My @App.Resources.Views.Shared._Layout.Contests</h1>
+
+<br/>
+<br/>
+
+
+@if (Model.CurrentContests.Count > 0)
+{
+    <div class="ended-contests">
+        <h2 class="section-title">@App.Resources.Views.Shared._Layout.CurrentContests</h2>
+
+        <div class="row">
+            @foreach (var contest in Model.CurrentContests)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card ended-contest-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    @if (contest.IfTrainer)
+                                    {
+                                        <h2 class="contest-name">@contest.Contest.ContestName - @App.Resources.Views.Shared._Layout.Trainer</h2>
+                                    }
+                                    else
+                                    {
+                                        <h2 class="contest-name">@contest.Contest.ContestName</h2>
+                                    }
+                                    
+                                    <p class="contest-duration">@contest.Contest.From - @contest.Contest.Until</p>
+
+                                    @if (contest.IfTrainer)
+                                    {
+                                        <div>
+
+                                            @foreach (var gameType in contest.GameTypes)
+                                            {
+                                                var selectedTitles = Model.RolePreferences!
+                                                    .Where(e => e.ContestId.Equals(contest.Contest.Id) 
+                                                                && e.GameTypeId.Equals(gameType.Id))
+                                                    .OrderBy(e => e.Level!.Title.ToString())
+                                                    .Select(e => e.Level!.Title)
+                                                    .ToList();
+                                                <p class="contest-detail">
+                                                    <strong>@gameType.GameTypeName:</strong>
+                                                    <p>
+                                                        @(selectedTitles.Any() ? string.Join(", ", selectedTitles) : "None")
+                                                    </p>
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.Level:</strong> @contest.Level.Title
+                                        </p>
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.GameType:</strong> @contest.GameType.GameTypeName
+                                        </p>
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.Package:</strong> @contest.PackageGameTypeTime.PackageGtName
+                                        </p>
+                                    }
+                                    @if (contest.AnyGames)
+                                    {
+                                        <div class="contest-actions">
+                                            <a class="btn btn-primary" asp-controller="Games" asp-action="Index" asp-route-contestId="@contest.Contest.Id">@App.Resources.Views.Shared._Layout.Games</a>
+                                        </div>
+                                    }
+                                    
+                                </div>
+
+                                @if (!contest.IfTrainer)
+                                {
+                                    <div class="col-md-6">
+
+                                        <h4>@App.Resources.Views.Shared._Layout.Teammates</h4>
+                                        <ul class="team-members">
+                                            @foreach (var userPackage in contest.UserContestPackages)
+                                            {
+                                                <li>@userPackage.AppUser!.FirstName @userPackage.AppUser!.LastName</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@if (Model.ComingContests.Count > 0)
+{
+    <div class="ended-contests">
+        <h2 class="section-title">@App.Resources.Views.Shared._Layout.UpcomingContests</h2>
+
+        <div class="row">
+            @foreach (var contest in Model.ComingContests)
+            {
+                <div class="col-md-7 mb-4">
+                    <div class="card ended-contest-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @if (contest.IfTrainer)
+                                    {
+                                        <h2 class="contest-name">@contest.Contest.ContestName - @App.Resources.Views.Shared._Layout.Trainer</h2>
+                                    }
+                                    else
+                                    {
+                                        <h2 class="contest-name">@contest.Contest.ContestName</h2>
+                                    }
+                                    <p class="contest-duration">@contest.Contest.From - @contest.Contest.Until</p>
+                                    @if (contest.IfTrainer)
+                                    {
+                                        <div>
+                                            @foreach (var gameType in contest.GameTypes)
+                                            {
+                                                var selectedTitles = Model.RolePreferences!
+                                                    .Where(e => e.ContestId.Equals(contest.Contest.Id) && 
+                                                                e.GameTypeId.Equals(gameType.Id))
+                                                    .OrderBy(e => e.Level!.Title.ToString())
+                                                    .Select(e => e.Level!.Title)
+                                                    .ToList();
+                                                <p class="contest-detail">
+                                                    <strong>@gameType.GameTypeName:</strong>
+                                                    <p>@(selectedTitles.Any() ? string.Join(", ", selectedTitles) : "None")</p>
+                                                </p>
+                                            }
+                                        </div>
+                                        <div class="contest-actions">
+                                            @if (contest.AnyGames)
+                                            {
+                                                <a class="btn btn-primary" asp-controller="Games" asp-action="Index" asp-route-contestId="@contest.Contest.Id">@App.Resources.Views.Shared._Layout.Games</a>
+                                            }
+                                            <a class="btn btn-primary" asp-controller="RolePreferences" asp-action="Create" asp-route-contestId="@contest.Contest.Id">@App.Resources.Views.Shared._Layout.Trainer_Preferences</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.Level:</strong> @contest.Level.Title
+                                        </p>
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.GameType:</strong> @contest.GameType.GameTypeName
+                                        </p>
+                                        <p class="contest-detail">
+                                            <strong>@App.Resources.Views.Shared._Layout.Package:</strong> @contest.PackageGameTypeTime.PackageGtName
+                                        </p>
+                                        <div class="contest-actions">
+
+                                            @if (contest.AnyGames)
+                                            {
+                                                <a class="btn btn-primary" asp-controller="Games" asp-action="Index" asp-route-contestId="@contest.Contest.Id">@App.Resources.Views.Shared._Layout.Games</a>
+                                            }
+                                            <a id="addTeammates" class="btn btn-success" asp-controller="UserContestPackages" asp-action="Invite" asp-route-contestId="@contest.Contest.Id" asp-route-teamId="@contest.UserContestPackage.TeamId">@App.Resources.Views.Shared._Layout.AddTeamMates</a>
+                                        </div>
+                                    }
+                                </div>
+                                @if (!contest.IfTrainer)
+                                {
+                                    <div class="col-md-6">
+
+                                        <h4>@App.Resources.Views.Shared._Layout.Teammates</h4>
+                                        <ul class="team-members">
+                                            @foreach (var userPackage in contest.UserContestPackages)
+                                            {
+                                                <li>@userPackage.AppUser!.FirstName @userPackage.AppUser!.LastName</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@if (Model.EndedContests.Count > 0)
+{
+    <div class="ended-contests">
+        <h2 class="section-title">@App.Resources.Views.Shared._Layout.Finished_contests</h2>
+
+        <div class="row">
+            @foreach (var contest in Model.EndedContests)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card ended-contest-card">
+                        <div class="card-body">
+                            <h2 class="contest-name">@contest.ContestName</h2>
+                            <p class="contest-duration">@contest.From - @contest.Until</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

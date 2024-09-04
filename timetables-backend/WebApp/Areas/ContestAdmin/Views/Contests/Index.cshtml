@@ -1,0 +1,61 @@
+@using App.Contracts.BLL
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<App.BLL.DTO.Contest>
+@inject IAppBLL _bll;
+
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.Contests;
+    
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.My @App.Resources.Views.Shared._Layout.Contests</h1>
+
+<p>
+    <a class="display-6 text-dark" asp-action="Create">@App.Resources.Views.Shared._Layout.Create @App.Resources.Views.Shared._Layout.New</a>
+</p>
+<br/>
+<div class="container">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">@App.Resources.Domain.Contest.ContestName</th>
+            <th scope="col">@App.Resources.Domain.Contest.From</th>
+            <th scope="col">@App.Resources.Domain.Contest.Until</th>
+            <th scope="col">@App.Resources.Domain.Contest.TotalHours</th>
+            <th scope="col">@App.Resources.Domain.Contest.ContestTypeId</th>
+            <th scope="col">@App.Resources.Domain.Contest.Location</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            var anyTeams =  _bll.UserContestPackages.AnyTeams(item.Id);
+            var anyGames = _bll.Games.AnyContestGames(item.Id);
+            <tr>
+                <td>@item.ContestName</td>
+                <td>@item.From.ToShortDateString()</td>
+                <td>@item.Until.ToShortDateString()</td>
+                <td>@item.TotalHours</td>
+                <td>@item.ContestType!.ContestTypeName</td>
+                <td>@item.Location!.LocationName</td>
+                <td>
+                    <a id="OverView" class="btn btn-success" asp-controller="Contests" asp-action="OverView" asp-route-contestId="@item.Id">@App.Resources.Views.Shared._Layout.Overview</a>
+                    <a class="btn btn-success" asp-controller="Games" asp-action="Create" asp-route-contestId="@item.Id">@App.Resources.Views.Shared._Layout.Create_Games</a>
+                        @if (anyGames)
+                        {
+                            <a class="btn btn-success" asp-controller="Games" asp-action="Index" asp-route-contestId="@item.Id">@App.Resources.Views.Shared._Layout.Games</a>
+                        }
+                    <a class="btn btn-success" asp-controller="AppUser" asp-action="Index" asp-route-contestId="@item.Id">@App.Resources.Views.Shared._Layout.Add_Trainers</a>
+                    
+                        @if (anyTeams)
+                        {
+                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">@App.Resources.Views.Shared._Layout.Edit</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">@App.Resources.Views.Shared._Layout.Delete</a>
+                        }
+                </td>
+            </tr>   
+        }
+        </tbody >
+    </table >
+</div>

@@ -1,0 +1,28 @@
+﻿@model WebApp.Areas.ContestAdmin.ViewModels.PackageGameTypeTimeCreateEditViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<br/>
+<div class="mb-3 row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="PackageGameTypeTime.PackageGtName" class="control-label"></label>
+                <input asp-for="PackageGameTypeTime.PackageGtName" class="form-control" required="required"/>
+                <span asp-validation-for="PackageGameTypeTime.PackageGtName" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="PackageGameTypeTime.GameType" class="control-label"></label>
+                <select asp-for="PackageGameTypeTime.GameTypeId" class="form-control" asp-items="Model.GameTypeSelectList" required="required"></select>
+                <span asp-validation-for="PackageGameTypeTime.GameTypeId" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="PackageGameTypeTime.Times" class="control-label"></label>
+                <input asp-for="PackageGameTypeTime.Times" class="form-control" required="required"/>
+                <span asp-validation-for="PackageGameTypeTime.Times" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>

@@ -1,0 +1,34 @@
+@model WebApp.ViewModels.UserTeamCreateViewModel
+
+@{
+    ViewData["Title"] = "Invite";
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Add @App.Resources.Views.Shared._Layout.PeopleToYourTeam</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Invite">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden="hidden" asp-for="ContestId" value="@Model.ContestId"/>
+            <input hidden="hidden" asp-for="TeamId" value="@Model.TeamId"/>
+            <div class="form-group">
+                <label asp-for="UserContestPackageSelectList" class="control-label">@App.Resources.Views.Shared._Layout.ListOfPplNames</label>
+                <select asp-for="UserContestPackageId" class ="form-control" asp-items="Model.UserContestPackageSelectList"></select>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="@App.Resources.Views.Shared._Layout.Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Contests" asp-action="MyContests">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

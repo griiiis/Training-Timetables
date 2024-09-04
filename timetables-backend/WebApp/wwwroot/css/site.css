@@ -1,0 +1,71 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.middle{
+  display: grid;
+  justify-content: space-evenly;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.ended-contest-card {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.ended-contest-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contest-name {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.contest-duration {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.contest-detail {
+  margin-bottom: 8px;
+}
+
+.contest-actions {
+  margin-top: 15px;
+}
+.center-anchor {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.and{
+  display: inline-block;
+}

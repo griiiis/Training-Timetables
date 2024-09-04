@@ -1,0 +1,26 @@
+@model WebApp.Areas.ContestAdmin.ViewModels.ContestCreateEditViewModel
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Contest;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Create @App.Resources.Views.Shared._Layout.New @App.Resources.Views.Shared._Layout.Contest</h1>
+
+<hr/>
+<form asp-action="Create">
+    <partial name="_CreateEdit" model="Model"/>
+
+    <div class="form-group middle">
+        <input type="submit" value="Create" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div>
+    <a class="middle" asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

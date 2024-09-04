@@ -1,0 +1,36 @@
+@model App.BLL.DTO.Level
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Level;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Delete @App.Resources.Views.Shared._Layout.Level</h1>
+
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <dl class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Title)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Title)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Description)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Description)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </dl>
+        <input type="submit" value="@App.Resources.Views.Shared._Layout.Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+    </form>
+</div>

@@ -1,0 +1,177 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Views\Shared\_Layout.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_Layout.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Contest.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Contest.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\ContestType.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ContestType.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Court.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Court.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Game.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Game.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\GameType.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>GameType.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Level.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Level.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\PackageGameTypeTime.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>PackageGameType.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\RolePreference.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>RolePreference.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Team.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Team.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\TeamGame.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>TeamGame.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Time.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Time.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\TimeOfDay.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>TimeOfDay.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\TimeTeam.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>TimeTeam.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\UserContestPackage.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>UserContestPackage.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\UserTeam.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>UserTeam.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Titles.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Titles.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Domain\Location.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Location.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Shared\_Layout.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_Layout.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Contest.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Contest.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\ContestType.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ContestType.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Court.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Court.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Game.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Game.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\GameType.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>GameType.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Level.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Level.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\PackageGameTypeTime.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PackageGameTypeTime.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\RolePreference.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>RolePreference.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Team.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Team.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\TeamGame.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TeamGame.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Time.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Time.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\TimeOfDay.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TimeOfDay.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\TimeTeam.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TimeTeam.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\UserContestPackage.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>UserContestPackage.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\UserTeam.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>UserTeam.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Titles.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Titles.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Domain\Location.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Location.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

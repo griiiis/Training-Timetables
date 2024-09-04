@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Privacy" xml:space="preserve">
+        <value>Privacy</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="Logout" xml:space="preserve">
+        <value>Logout</value>
+    </data>
+    <data name="Home" xml:space="preserve">
+        <value>Home</value>
+    </data>
+    <data name="Contest" xml:space="preserve">
+        <value>Contest</value>
+    </data>
+    <data name="ContestType" xml:space="preserve">
+        <value>Contest Type</value>
+    </data>
+    <data name="GameTypes" xml:space="preserve">
+        <value>Game Types</value>
+    </data>
+    <data name="Games" xml:space="preserve">
+        <value>Games</value>
+    </data>
+    <data name="Courts" xml:space="preserve">
+        <value>Courts</value>
+    </data>
+    <data name="Levels" xml:space="preserve">
+        <value>Levels</value>
+    </data>
+    <data name="Locations" xml:space="preserve">
+        <value>Locations</value>
+    </data>
+    <data name="Packages" xml:space="preserve">
+        <value>Packages</value>
+    </data>
+    <data name="RolePreferences" xml:space="preserve">
+        <value>Role Preferences</value>
+    </data>
+    <data name="Times" xml:space="preserve">
+        <value>Times</value>
+    </data>
+    <data name="TimeOfDays" xml:space="preserve">
+        <value>Time Of Days</value>
+    </data>
+    <data name="Teams" xml:space="preserve">
+        <value>Teams</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Details" xml:space="preserve">
+        <value>Details</value>
+    </data>
+    <data name="Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="Contests" xml:space="preserve">
+        <value>Contests</value>
+    </data>
+    <data name="ContestTypes" xml:space="preserve">
+        <value>Contest Types</value>
+    </data>
+    <data name="Court" xml:space="preserve">
+        <value>Court</value>
+    </data>
+    <data name="Game" xml:space="preserve">
+        <value>Game</value>
+    </data>
+    <data name="GameType" xml:space="preserve">
+        <value>Game Type</value>
+    </data>
+    <data name="Level" xml:space="preserve">
+        <value>Level</value>
+    </data>
+    <data name="Location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="Package" xml:space="preserve">
+        <value>Package</value>
+    </data>
+    <data name="Team" xml:space="preserve">
+        <value>Team</value>
+    </data>
+    <data name="TimeOfDay" xml:space="preserve">
+        <value>Time Of Day</value>
+    </data>
+    <data name="Time" xml:space="preserve">
+        <value>Time</value>
+    </data>
+    <data name="New" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="JoinTheContest" xml:space="preserve">
+        <value>Join the Contest</value>
+    </data>
+    <data name="My" xml:space="preserve">
+        <value>My</value>
+    </data>
+    <data name="Back To List" xml:space="preserve">
+        <value>Back To List</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="Create Games" xml:space="preserve">
+        <value>Create Games</value>
+    </data>
+    <data name="Add Trainers" xml:space="preserve">
+        <value>Add Trainers</value>
+    </data>
+    <data name="Role" xml:space="preserve">
+        <value>Role</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>Add</value>
+    </data>
+    <data name="Teammates" xml:space="preserve">
+        <value>Teammates</value>
+    </data>
+    <data name="ListOfPplNames" xml:space="preserve">
+        <value>List of people</value>
+    </data>
+    <data name="PeopleToYourTeam" xml:space="preserve">
+        <value>People To Your Team</value>
+    </data>
+    <data name="CurrentContests" xml:space="preserve">
+        <value>Current contests</value>
+    </data>
+    <data name="UpcomingContests" xml:space="preserve">
+        <value>Upcoming contests</value>
+    </data>
+    <data name="Finished contests" xml:space="preserve">
+        <value>Finished contests</value>
+    </data>
+    <data name="AddTeamMates" xml:space="preserve">
+        <value>Add Teammates</value>
+    </data>
+    <data name="NumberOfParticipants" xml:space="preserve">
+        <value>Number of Participants</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="AlreadyJoined" xml:space="preserve">
+        <value>Already joined</value>
+    </data>
+    <data name="Trainer" xml:space="preserve">
+        <value>Trainer</value>
+    </data>
+    <data name="Hello" xml:space="preserve">
+        <value>Hello</value>
+    </data>
+    <data name="Login" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="SignUp" xml:space="preserve">
+        <value>Sign-Up</value>
+    </data>
+    <data name="Trainer Preferences" xml:space="preserve">
+        <value>Trainer Preferenced</value>
+    </data>
+    <data name="Overview" xml:space="preserve">
+        <value>Overview</value>
+    </data>
+    <data name="Participants and Trainers" xml:space="preserve">
+        <value>Participants and Trainers</value>
+    </data>
+</root>

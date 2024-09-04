@@ -1,0 +1,36 @@
+﻿@model WebApp.Areas.ContestAdmin.ViewModels.ContestOverviewViewModel
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.Contest;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.My @App.Resources.Views.Shared._Layout.Contest</h1>
+
+<hr/>
+<div class="container">
+    <div class="row">
+        @foreach (var gameType in Model.GameTypes)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@gameType.GameTypeName</h5>
+                        <p class="card-text">Teams Count: @Model.Teams.Count(g => g.GameTypeId == gameType.Id)</p>
+                        <p class="card-text">People Count: @Model.UserContestPackages.Count(u => u.Team!.GameTypeId == gameType.Id)</p>
+                        <p class="card-text">Trainers Count: @Model.Teachers.Count(e => e.AppUser!.RolePreferences.Any(e => e.GameTypeId.Equals(gameType.Id)))</p>
+                        <hr>
+                        <h6 class="mt-4">Tasemete järgi</h6>
+                        <ul class="list-unstyled">
+                            @foreach (var level in Model.Levels)
+                            {
+                                <li>@level.Title: @Model.UserContestPackages.Select(e => e.Team).Count(g => g!.GameTypeId == gameType.Id && g.LevelId.Equals(level.Id))</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div>
+    <a class="middle" asp-action="Index">Back to List</a>
+</div>

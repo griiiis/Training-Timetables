@@ -1,0 +1,258 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-WebApp-C4EFDA37-6F7E-4665-B8B2-A90205BCFACE</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+        <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+        <PackageReference Include="Npgsql" Version="8.0.2" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\App.BLL.DTO\App.BLL.DTO.csproj" />
+      <ProjectReference Include="..\App.BLL\App.BLL.csproj" />
+      <ProjectReference Include="..\App.Contracts.BLL\App.Contracts.BLL.csproj" />
+      <ProjectReference Include="..\App.DAL.EF\App.DAL.EF.csproj" />
+      <ProjectReference Include="..\App.DTO\App.DTO.csproj" />
+      <ProjectReference Include="..\App.Resources\App.Resources.csproj" />
+      <ProjectReference Include="..\Base.Resources\Base.Resources.csproj" />
+      <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\AppUser\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\AppUser\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Contests\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Contests\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Contests\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Contests\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\ContestTypes\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\ContestTypes\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\ContestTypes\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\ContestTypes\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Courts\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Courts\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Courts\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Courts\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Games\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Games\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\GameTypes\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\GameTypes\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\GameTypes\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\GameTypes\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Levels\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Levels\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Levels\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Levels\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\PackageGameTypeTimes\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\PackageGameTypeTimes\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\PackageGameTypeTimes\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\PackageGameTypeTimes\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\TimeOfDays\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\TimeOfDays\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\TimeOfDays\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\TimeOfDays\Index.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Times\Create.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Times\Delete.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Times\Edit.cshtml" />
+      <AdditionalFiles Include="Areas\ContestAdmin\Views\Times\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\ContestPackages\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestPackages\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestPackages\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestPackages\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestPackages\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Contests\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Contests\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Contests\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Contests\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Contests\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestTypes\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestTypes\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestTypes\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestTypes\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ContestTypes\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Courts\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Courts\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Courts\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Courts\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Courts\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Games\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Games\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Games\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Games\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Games\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\GameTypes\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\GameTypes\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\GameTypes\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\GameTypes\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\GameTypes\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Levels\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Levels\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Levels\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Levels\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Levels\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PackageGameTypeTimes\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PackageGameTypeTimes\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PackageGameTypeTimes\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PackageGameTypeTimes\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PackageGameTypeTimes\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\RolePreferences\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\RolePreferences\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\RolePreferences\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\RolePreferences\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\RolePreferences\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TeamGames\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TeamGames\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TeamGames\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TeamGames\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TeamGames\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Teams\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Teams\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Teams\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Teams\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Teams\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeOfDays\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeOfDays\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeOfDays\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeOfDays\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeOfDays\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Times\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Times\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Times\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Times\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Times\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeTeams\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeTeams\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeTeams\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeTeams\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\TimeTeams\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserContestPackages\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserContestPackages\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserContestPackages\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserContestPackages\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserContestPackages\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserTeams\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserTeams\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserTeams\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserTeams\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserTeams\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserContestPackages\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserContestPackages\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserContestPackages\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserContestPackages\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserContestPackages\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ConfirmEmail.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Lockout.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Login.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\LoginWith2fa.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\LoginWithRecoveryCode.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Logout.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\Email.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\EnableAuthenticator.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\PersonalData.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\SetPassword.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_Layout.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_StatusMessage.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\Register.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ResendEmailConfirmation.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\_StatusMessage.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\_CreateEdit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ContestPackages\_DetailDelete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\_CreateEdit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TeamGames\_DetailDelete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\_CreateEdit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TimeTeams\_DetailDelete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\_CreateEdit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\UserTeams\_DetailDelete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AppUser\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AppUser\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AppUser\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AppUser\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AppUser\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\UserContestPackages\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserContestPackages\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserContestPackages\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserContestPackages\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserContestPackages\Index.cshtml" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+</Project>

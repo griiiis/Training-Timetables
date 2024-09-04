@@ -1,0 +1,24 @@
+@model WebApp.Areas.ContestAdmin.ViewModels.CourtCreateEditViewModel
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Court;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Edit</h1>
+
+<hr />
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Court.Id" />
+            <partial name="_CreateEdit" model="Model"/>
+            <div class="form-group">
+                <input type="submit" value="@App.Resources.Views.Shared._Layout.Save" class="btn btn-primary"/>
+            </div>
+        </form>
+
+<div>
+    <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

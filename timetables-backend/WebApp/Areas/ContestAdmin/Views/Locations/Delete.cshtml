@@ -1,0 +1,43 @@
+@model App.BLL.DTO.Location
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Location;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Delete @App.Resources.Views.Shared._Layout.Location</h1>
+
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+
+        <dl class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.LocationName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.LocationName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.State)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.State)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Country)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Country)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </dl>
+        <input type="submit" value="@App.Resources.Views.Shared._Layout.Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+@model WebApp.ViewModels.RolePreferenceCreateEditViewModel
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.RolePreferences;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.RolePreferences</h1>
+
+<hr/>
+<form asp-action="Create" id="rolePreferences">
+    <div class="container">
+        <div class="row row-cols-@(Model.GameTypes!.Count)">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @{
+                <input hidden="hidden" asp-for="ContestId" value="@Model.ContestId"/>
+                for (var i = 0; i < Model.GameTypes!.Count; i++)
+                {
+                    <div class="col-md-4">
+                        <h2>@Model.GameTypes[i].GameTypeName</h2>
+                        <div class="form-group">
+                            <label class="control-label">@App.Resources.Views.Shared._Layout.Level</label>
+                            @{
+                                if (Model.PreviousRolePreferences != null)
+                                {
+                                    <select multiple="multiple" asp-for="SelectedLevelsList[i]" class="form-control" required="required">
+                                        <option value="-1">None</option>
+                                        @foreach (var level in Model.LevelSelectList!)
+                                        {
+                                            if (Model.PreviousRolePreferences.Any(e => e.LevelId.ToString().Equals(level.Value) && e.GameTypeId.Equals(Model.GameTypes[i].Id)))
+                                            {
+                                                <option selected="selected" value="@level.Value">@level.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@level.Value">@level.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select required="required" multiple="multiple" asp-for="SelectedLevelsList[i]" class="form-control" asp-items="Model.LevelSelectList">
+                                        <option value="-1">None</option>
+                                    </select>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <br/>
+        <br/>
+        <input type="submit" class="btn btn-primary" value="@App.Resources.Views.Shared._Layout.Create"/>
+    </div>
+</form >
+<div >
+    <a class="middle" asp-controller="Contests" asp-action="MyContests"> @App.Resources.Views.Shared._Layout.Back_To_List </a >
+</div >
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

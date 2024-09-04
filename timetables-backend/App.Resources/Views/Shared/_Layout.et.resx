@@ -1,0 +1,185 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Privacy" xml:space="preserve">
+        <value>Privaatsus</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Keel</value>
+    </data>
+    <data name="Logout" xml:space="preserve">
+        <value>Logi välja</value>
+    </data>
+    <data name="Home" xml:space="preserve">
+        <value>Avaleht</value>
+    </data>
+    <data name="Contest" xml:space="preserve">
+        <value>Üritus</value>
+    </data>
+    <data name="ContestType" xml:space="preserve">
+        <value>Ürituse tüüp</value>
+    </data>
+    <data name="GameTypes" xml:space="preserve">
+        <value>Mängude tüübid</value>
+    </data>
+    <data name="Games" xml:space="preserve">
+        <value>Mängud</value>
+    </data>
+    <data name="Courts" xml:space="preserve">
+        <value>Väljakud</value>
+    </data>
+    <data name="Levels" xml:space="preserve">
+        <value>Tasemed</value>
+    </data>
+    <data name="Locations" xml:space="preserve">
+        <value>Asukohad</value>
+    </data>
+    <data name="Packages" xml:space="preserve">
+        <value>Paketid</value>
+    </data>
+    <data name="RolePreferences" xml:space="preserve">
+        <value>Rollide eelistus</value>
+    </data>
+    <data name="Times" xml:space="preserve">
+        <value>Kellaajad</value>
+    </data>
+    <data name="TimeOfDays" xml:space="preserve">
+        <value>Päevaajad</value>
+    </data>
+    <data name="Teams" xml:space="preserve">
+        <value>Tiimid</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Muuda</value>
+    </data>
+    <data name="Details" xml:space="preserve">
+        <value>Detailid</value>
+    </data>
+    <data name="Delete" xml:space="preserve">
+        <value>Kustuta</value>
+    </data>
+    <data name="Create" xml:space="preserve">
+        <value>Loo</value>
+    </data>
+    <data name="Contests" xml:space="preserve">
+        <value>Üritused</value>
+    </data>
+    <data name="ContestTypes" xml:space="preserve">
+        <value>Ürituse tüübid</value>
+    </data>
+    <data name="Court" xml:space="preserve">
+        <value>Väljak</value>
+    </data>
+    <data name="Game" xml:space="preserve">
+        <value>Mäng</value>
+    </data>
+    <data name="GameType" xml:space="preserve">
+        <value>Mängu tüüp</value>
+    </data>
+    <data name="Level" xml:space="preserve">
+        <value>Tase</value>
+    </data>
+    <data name="Location" xml:space="preserve">
+        <value>Asukoht</value>
+    </data>
+    <data name="Package" xml:space="preserve">
+        <value>Pakett</value>
+    </data>
+    <data name="Team" xml:space="preserve">
+        <value>Tiim</value>
+    </data>
+    <data name="TimeOfDay" xml:space="preserve">
+        <value>Päevaaeg</value>
+    </data>
+    <data name="Time" xml:space="preserve">
+        <value>Kellaaeg</value>
+    </data>
+    <data name="New" xml:space="preserve">
+        <value>Uus</value>
+    </data>
+    <data name="JoinTheContest" xml:space="preserve">
+        <value>Ühine üritusega</value>
+    </data>
+    <data name="My" xml:space="preserve">
+        <value>Minu</value>
+    </data>
+    <data name="Back To List" xml:space="preserve">
+        <value>Tagasi</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>Salvesta</value>
+    </data>
+    <data name="Create Games" xml:space="preserve">
+        <value>Loo Mängud</value>
+    </data>
+    <data name="Add Trainers" xml:space="preserve">
+        <value>Lisa Treenerid</value>
+    </data>
+    <data name="Role" xml:space="preserve">
+        <value>Roll</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>Lisa</value>
+    </data>
+    <data name="Teammates" xml:space="preserve">
+        <value>Tiimikaaslased</value>
+    </data>
+    <data name="ListOfPplNames" xml:space="preserve">
+        <value>Inimeste nimekiri</value>
+    </data>
+    <data name="PeopleToYourTeam" xml:space="preserve">
+        <value>Inimesi Enda Tiimi</value>
+    </data>
+    <data name="CurrentContests" xml:space="preserve">
+        <value>Hetkel toimuvad üritused</value>
+    </data>
+    <data name="UpcomingContests" xml:space="preserve">
+        <value>Tulevased üritused</value>
+    </data>
+    <data name="Finished contests" xml:space="preserve">
+        <value>Lõppenud üritused</value>
+    </data>
+    <data name="AddTeamMates" xml:space="preserve">
+        <value>Lisa Tiimikaaslasi</value>
+    </data>
+    <data name="NumberOfParticipants" xml:space="preserve">
+        <value>Osalejate arv</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Seadistused</value>
+    </data>
+    <data name="AlreadyJoined" xml:space="preserve">
+        <value>Juba ühinetud</value>
+    </data>
+    <data name="Trainer" xml:space="preserve">
+        <value>Treener</value>
+    </data>
+    <data name="Hello" xml:space="preserve">
+        <value>Tere</value>
+    </data>
+    <data name="Login" xml:space="preserve">
+        <value>Logi sisse</value>
+    </data>
+    <data name="SignUp" xml:space="preserve">
+        <value>Registreeri</value>
+    </data>
+    <data name="Trainer Preferences" xml:space="preserve">
+        <value>Treeneri Eelistused</value>
+    </data>
+    <data name="Overview" xml:space="preserve">
+        <value>Ülevaade</value>
+    </data>
+    <data name="Participants and Trainers" xml:space="preserve">
+        <value>Osavõtjad ja Treenerid</value>
+    </data>
+</root>

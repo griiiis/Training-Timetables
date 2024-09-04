@@ -1,0 +1,39 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.ViewModels.UserContestPackageCreateViewModel
+
+@{
+    ViewData["Title"] = App.Resources.Views.Shared._Layout.JoinTheContest;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.JoinTheContest</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="joinForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="UserContestPackage.HoursAvailable" class="form-control" hidden="hidden" value="@Model.Contest!.TotalHours"/>
+            <input asp-for="UserContestPackage.ContestId" class ="form-control" value="@Model.Contest!.Id" hidden="hidden"></input>
+            <div class="form-group">
+                <label asp-for="UserContestPackage.PackageGameTypeTimeId" class="control-label">@App.Resources.Views.Shared._Layout.Packages</label>
+                <select asp-for="UserContestPackage.PackageGameTypeTimeId" class ="form-control" asp-items="Model.PackageGameTypeTimeSelectList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserContestPackage.LevelId" class="control-label">@App.Resources.Views.Shared._Layout.Levels</label>
+                <select asp-for="UserContestPackage.LevelId" class ="form-control" asp-items="Model.LevelSelectList"></select>
+            </div>
+            <!--Lisa juurde-->
+            <div class="form-group">
+                <input type="submit" value="Join the Contest" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

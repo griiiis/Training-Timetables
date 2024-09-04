@@ -1,0 +1,168 @@
+@using App.Contracts.BLL
+@using App.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.ViewModels.ContestIndexViewModel
+@inject UserManager<AppUser> _userManager;
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Contests;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Contests</h1>
+
+<br/>
+
+@if (Model.CurrentContests!.Count > 0)
+{
+    <div class="ended-contests">
+        <h2 class="middle">@App.Resources.Views.Shared._Layout.CurrentContests</h2>
+
+        <div class="row">
+            @foreach (var contest in Model.CurrentContests)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="ended-contest-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h2 class="contest-name">@contest.Contest.ContestName</h2>
+                                    <p class="contest-duration">@contest.Contest.From - @contest.Contest.Until</p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.Location:</strong> @contest.Contest.Location!.LocationName
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Domain.Contest.TotalHours:</strong> @contest.Contest.TotalHours
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.ContestType:</strong> @contest.Contest.ContestType!.ContestTypeName
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.NumberOfParticipants:</strong> @contest.NumberOfParticipants
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.GameTypes:</strong> @string.Join(", ", contest.GameTypes.Select(e => e.GameTypeName));
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <br/>
+}
+
+
+@if (Model.ComingContests!.Count > 0)
+{
+    <div class="ended-contests">
+        <h2 class="middle">@App.Resources.Views.Shared._Layout.UpcomingContests</h2>
+        <br/>
+
+        <div class="row">
+            @foreach (var contest in Model.ComingContests)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="ended-contest-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h2 class="contest-name">@contest.Contest.ContestName</h2>
+                                    <p class="contest-duration">@contest.Contest.From - @contest.Contest.Until</p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.Location:</strong> @contest.Contest.Location!.LocationName
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Domain.Contest.TotalHours:</strong> @contest.Contest.TotalHours
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.ContestType:</strong> @contest.Contest.ContestType!.ContestTypeName
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.NumberOfParticipants:</strong> @contest.NumberOfParticipants
+                                    </p>
+                                    <p class="contest-detail">
+                                        <strong>@App.Resources.Views.Shared._Layout.GameTypes:</strong> @string.Join(", ", contest.GameTypes.Select(e => e.GameTypeName));
+                                    </p>
+                                    @if (contest.ifAlreadyJoined)
+                                    {
+                                        <div class="contest-actions">
+                                            <button class="btn btn-success" disabled="disabled">@App.Resources.Views.Shared._Layout.AlreadyJoined</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="contest-actions">
+                                            <a class="btn btn-success" asp-controller="UserContestPackages" asp-action="Create" asp-route-contestId="@contest.Contest.Id">@App.Resources.Views.Shared._Layout.JoinTheContest</a>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    
+    <br/>
+    <h2>Search For Contest!</h2>
+<form method="get">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Search"  class="control-label"></label>
+        <input asp-for="Search" value="@Model.Search" class="form-control"/>
+        <span asp-validation-for="Search" class="text-danger"></span>
+    </div>
+    <div class="mb-3 and">
+        <input asp-for="Location" class="form-check-input"/>
+        <label asp-for="Location" class="control-label"></label>
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+    <div class="mb-3 and">
+        <input asp-for="ContestType"  class="form-check-input"/>
+        <label asp-for="ContestType" class="control-label"></label>
+        <span asp-validation-for="ContestType" class="text-danger"></span>
+    </div>
+    <div class="mb-3 and">
+        <input asp-for="GameType" class="form-check-input"/>
+        <label asp-for="GameType" class="control-label"></label>
+        <span asp-validation-for="GameType" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div class="container">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">@App.Resources.Domain.Contest.ContestName</th>
+            <th scope="col">@App.Resources.Domain.Contest.From</th>
+            <th scope="col">@App.Resources.Domain.Contest.Until</th>
+            <th scope="col">@App.Resources.Domain.Contest.TotalHours</th>
+            <th scope="col">@App.Resources.Domain.Contest.ContestTypeId</th>
+            <th scope="col">@App.Resources.Domain.Contest.Location</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.SearchedContests!)
+        {
+            <tr>
+                <td>@item.ContestName</td>
+                <td>@item.From.ToShortDateString()</td>
+                <td>@item.Until.ToShortDateString()</td>
+                <td>@item.TotalHours</td>
+                <td>@item.ContestType!.ContestTypeName</td>
+                <td>@item.Location!.LocationName</td>
+            </tr>
+        }
+        </tbody >
+    </table >
+</div>
+<br/>
+}

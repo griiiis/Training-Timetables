@@ -1,0 +1,128 @@
+﻿@using App.Contracts.DAL
+@using App.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject RoleManager<AppRole> RoleManager;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IAppUnitOfWork _uow
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - TimeTables</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true"/>
+</head>
+<body>
+@{
+    if (SignInManager.IsSignedIn(User) && User.IsInRole("Contest Admin")
+       )
+    {
+        <header class="p-3 bg-dark text-white">
+            <div class="container d-flex justify-content-md-between">
+                <a class="d-flex align-items-center text-white text-decoration-none" asp-area="" asp-controller="Contests" asp-action="Index">TimeTables</a>
+                <ul class="nav center-anchor">
+                    <li>
+                        <a class="nav-link px-2 text-secondary" asp-area="" asp-controller="Contests" asp-action="Index">@App.Resources.Views.Shared._Layout.Home</a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-2 text-white" asp-area="ContestAdmin" asp-controller="Contests" asp-action="Index">@App.Resources.Views.Shared._Layout.My @App.Resources.Views.Shared._Layout.Contests</a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-2 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @App.Resources.Views.Shared._Layout.Settings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="ContestTypes" asp-action="Index">@App.Resources.Views.Shared._Layout.ContestType</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="GameTypes" asp-action="Index">@App.Resources.Views.Shared._Layout.GameTypes</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="Courts" asp-action="Index">@App.Resources.Views.Shared._Layout.Courts</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="Levels" asp-action="Index">@App.Resources.Views.Shared._Layout.Levels</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="Locations" asp-action="Index">@App.Resources.Views.Shared._Layout.Locations</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="PackageGameTypeTimes" asp-action="Index">@App.Resources.Views.Shared._Layout.Packages</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="TimeOfDays" asp-action="Index">@App.Resources.Views.Shared._Layout.TimeOfDays</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-dark" asp-area="ContestAdmin" asp-controller="Times" asp-action="Index">@App.Resources.Views.Shared._Layout.Times</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <partial name="_LoginPartial"/>
+            </div>
+        </header>
+        <div class="b-example-divider"></div>
+    }
+    else if (SignInManager.IsSignedIn(User) && _uow.UserContestPackages.GetAllAsync(default).Result.Any(e => e.AppUserId == UserManager.GetUserAsync(User).Result!.Id))
+    {
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-md-between">
+                    <a class="d-flex align-items-center mb-2 mb-md-0 text-white text-decoration-none" asp-area="" asp-controller="Contests" asp-action="Index">TimeTables</a>
+                    <ul class="nav center-anchor">
+                        <li>
+                            <a class="nav-link px-2 text-white" asp-area="" asp-controller="Contests" asp-action="Index">@App.Resources.Views.Shared._Layout.Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2 text-white" asp-area="" asp-controller="Contests" asp-action="MyContests">@App.Resources.Views.Shared._Layout.My @App.Resources.Views.Shared._Layout.Contests</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                </div>
+            </div>
+        </header>
+        <div class="b-example-divider"></div>
+    }
+    else
+    {
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
+                    <a class="d-flex align-items-center mb-2 mb-md-0 text-white text-decoration-none" asp-area="" asp-controller="Contests" asp-action="Index">TimeTables</a>
+                    <ul class="nav center-anchor">
+                        <li>
+                            <a class="nav-link px-2 text-white" asp-area="" asp-controller="Contests" asp-action="Index">@App.Resources.Views.Shared._Layout.Home</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                </div>
+            </div>
+        </header>
+        <div class="b-example-divider"></div>
+    }
+}
+
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2024 - WebApp
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

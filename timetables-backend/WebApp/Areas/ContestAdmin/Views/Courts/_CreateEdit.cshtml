@@ -1,0 +1,26 @@
+﻿@model WebApp.Areas.ContestAdmin.ViewModels.CourtCreateEditViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<br/>
+<div class="mb-3 row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="Court.CourtName" class="control-label">@App.Resources.Domain.Court.CourtName</label>
+                <input asp-for="Court.CourtName" class="form-control" required="required"/>
+                <span asp-validation-for="Court.CourtName" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Court.GameTypeId" class="control-label">@App.Resources.Views.Shared._Layout.GameType</label>
+                <select asp-for="Court.GameTypeId" class="form-control" asp-items="Model.GameTypeSelectList" required="required"></select>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Court.Location" class="control-label"></label>
+                <select asp-for="Court.LocationId" class="form-control" asp-items="Model.LocationSelectList" required="required"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>

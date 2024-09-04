@@ -1,0 +1,72 @@
+@using App.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@model WebApp.Areas.ContestAdmin.ViewModels.AppUserIndexViewModel
+@inject UserManager<AppUser> _UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Participants_and_Trainers</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.FirstName))
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoleModels.First().Package.AppUser!.Email)
+            </th>
+            <th>
+                Roll
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.UserRoleModels) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.AppUser!.Email)
+            </td>
+            <td>
+                @{
+                @Html.DisplayFor(modelItem => item.Role.ContestRoleName)
+                }
+            </td>
+            <td>
+                <a id="EditButton" asp-action="Edit" asp-route-userId="@item.Package.AppUserId" asp-route-contestId="@Model.ContestId">@App.Resources.Views.Shared._Layout.Edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

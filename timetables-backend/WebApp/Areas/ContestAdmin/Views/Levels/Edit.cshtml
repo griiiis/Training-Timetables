@@ -1,0 +1,24 @@
+@model App.BLL.DTO.Level
+
+@{
+    ViewData["Title"] = @App.Resources.Views.Shared._Layout.Level;
+}
+
+<h1 class="middle">@App.Resources.Views.Shared._Layout.Edit</h1>
+
+<hr />
+        <form asp-action="Edit">
+            <partial name="_CreateEdit" model="Model"/>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="@App.Resources.Views.Shared._Layout.Save" class="btn btn-primary" />
+            </div>
+        </form>
+
+<div>
+    <a asp-action="Index">@App.Resources.Views.Shared._Layout.Back_To_List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

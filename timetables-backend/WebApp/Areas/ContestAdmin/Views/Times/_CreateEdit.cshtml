@@ -1,0 +1,28 @@
+﻿@model WebApp.Areas.ContestAdmin.ViewModels.TimeCreateEditViewModel
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<br/>
+<div class="mb-3 row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="Time.From" class="control-label"></label>
+                <input asp-for="Time.From" class="form-control" type="time" required="required"/>
+                <span asp-validation-for="Time.From" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Time.Until" class="control-label"></label>
+                <input asp-for="Time.Until" class="form-control" type="time" required="required"/>
+                <span asp-validation-for="Time.Until" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Time.TimeOfDay" class="control-label"></label>
+                <select asp-for="Time.TimeOfDayId" class="form-control" asp-items="Model.TimeOfDaySelectList" required="required"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
