@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text;
 using App.DTO.v1_0;
 using App.DTO.v1_0.Identity;
+using App.DTO.v1_0.Models.Contests;
 using Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
@@ -132,7 +133,7 @@ public class ContestControllerTest : IClassFixture<CustomWebApplicationFactory<P
 
          
         
-        var contest = new App.DTO.v1_0.ContestEditModel
+        var contest = new ContestEditModel
         {
             Contest = new Contest()
             {

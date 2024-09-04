@@ -1,5 +1,6 @@
 ﻿using App.BLL.DTO;
 using App.BLL.DTO.Models;
+using App.BLL.DTO.Models.Contests;
 using App.Contracts.BLL.Services;
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories;
@@ -167,7 +168,7 @@ public class ContestService :
         await Uow.SaveChangesAsync();
     }
 
-    public async Task<Contest> PostContest(Guid userId, ContestEditModel contest)
+    public async Task<Contest> PostContest(Guid userId, ContestCreateModel contest)
     {
         contest.Contest.Id = Guid.NewGuid();
         contest.Contest.From = contest.Contest.From.ToUniversalTime();

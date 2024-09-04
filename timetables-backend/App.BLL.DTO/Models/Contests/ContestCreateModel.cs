@@ -1,6 +1,6 @@
-﻿namespace App.DTO.v1_0;
+﻿namespace App.BLL.DTO.Models.Contests;
 
-public class ContestEditModel
+public class ContestCreateModel
 {
     public Contest Contest { get; set; } = default!;
     public List<Guid>? SelectedLevelIds { get; set; }

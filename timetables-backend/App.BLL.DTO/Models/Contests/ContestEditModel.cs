@@ -1,4 +1,4 @@
-﻿namespace App.BLL.DTO.Models;
+﻿namespace App.BLL.DTO.Models.Contests;
 
 public class ContestEditModel
 {

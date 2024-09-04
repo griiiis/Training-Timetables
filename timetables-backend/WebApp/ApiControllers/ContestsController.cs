@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Identity;
 using App.DTO.v1_0;
+using App.DTO.v1_0.Models.Contests;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,7 +25,8 @@ namespace WebApp.ApiControllers
         private readonly IAppBLL _bll;
         private readonly UserManager<AppUser> _userManager;
         private readonly PublicDTOBllMapper<Contest, App.BLL.DTO.Contest> _mapper;
-        private readonly PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.ContestEditModel> _editModelMapper;
+        private readonly PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.Contests.ContestEditModel> _editModelMapper;
+        private readonly PublicDTOBllMapper<ContestCreateModel, App.BLL.DTO.Models.Contests.ContestCreateModel> _createModelMapper;
 
         private Guid UserId => Guid.Parse(_userManager.GetUserId(User)!);
 
@@ -39,7 +41,8 @@ namespace WebApp.ApiControllers
             _bll = bll;
             _userManager = userManager;
             _mapper = new PublicDTOBllMapper<Contest, App.BLL.DTO.Contest>(autoMapper);
-            _editModelMapper = new PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.ContestEditModel>(autoMapper);
+            _editModelMapper = new PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.Contests.ContestEditModel>(autoMapper);
+            _createModelMapper = new PublicDTOBllMapper<ContestCreateModel, App.BLL.DTO.Models.Contests.ContestCreateModel>(autoMapper);
         }
 
         /// <summary>
@@ -221,7 +224,7 @@ namespace WebApp.ApiControllers
         [ProducesResponseType<Contest>((int)HttpStatusCode.Created)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<Contest>> PostContest(ContestEditModel contest)
+        public async Task<ActionResult<Contest>> PostContest(ContestCreateModel contest)
         {
             if (contest.SelectedLevelIds!.Count < 1 || contest.SelectedTimesIds!.Count < 1 ||
                 contest.SelectedPackagesIds!.Count < 1)
@@ -229,9 +232,7 @@ namespace WebApp.ApiControllers
                 return NotFound("Required forms not filled!");
             }
             
-            
-
-            var newContest = await _bll.Contests.PostContest(UserId, _editModelMapper.Map(contest));
+            var newContest = await _bll.Contests.PostContest(UserId, _createModelMapper.Map(contest));
 
             return CreatedAtAction("GetContest", new
             {

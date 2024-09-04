@@ -1,8 +1,8 @@
-import { IContestType } from "../IContestType"
-import { ILevel } from "../ILevel"
-import { ILocation } from "../ILocation"
-import { IPackageGameTypeTime } from "../IPackageGameTypeTime"
-import { ITime } from "../ITime"
+import { IContestType } from "../../IContestType"
+import { ILevel } from "../../ILevel"
+import { ILocation } from "../../ILocation"
+import { IPackageGameTypeTime } from "../../IPackageGameTypeTime"
+import { ITime } from "../../ITime"
 
 export interface IContestEditModel {
     "contest": {

@@ -1,10 +1,10 @@
 "use client"
 import { IContestType } from "@/domain/IContestType";
-import { IGameType } from "@/domain/IGameType";
 import { ILevel } from "@/domain/ILevel";
 import { ILocation } from "@/domain/ILocation";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
 import { ITime } from "@/domain/ITime";
+import { IContestCreateModel } from "@/domain/Models/Contests/IContestCreateModel";
 import ContestService from "@/services/ContestService";
 import ContestTypeService from "@/services/ContestTypeService";
 import GameTypeService from "@/services/GameTypeService";
@@ -22,7 +22,7 @@ export default function Create() {
     const [description, setDescription] = useState("");
     const [from, setFrom] = useState('');
     const [until, setUntil] = useState('');
-    const [totalHours, setTotalHours] = useState("0");
+    const [totalHours, setTotalHours] = useState(0);
     const [contestTypeId, setContestTypeId] = useState("");
     const [contestTypes, setContestTypes] = useState<IContestType[]>([]);
     const [locations, setLocations] = useState<ILocation[]>([]);
@@ -37,7 +37,7 @@ export default function Create() {
     const [isLoading, setIsLoading] = useState(true);
 
     const CreateNewContest = async () => {
-        const contestData = {
+        const createContestData : IContestCreateModel = {
             contest: {
             contestName: contestName,
             description: description,
@@ -51,7 +51,7 @@ export default function Create() {
             selectedTimesIds: timesIds,
             selectedPackagesIds: packagesIds,
         };
-        const response = await ContestService.postContest(contestData);
+        const response = await ContestService.postContest(createContestData);
         if (response.data) {
             router.push("/ContestAdmin/Contest");
         }
@@ -159,7 +159,7 @@ export default function Create() {
                     <div className="col-md-4">
                         <div className="form-group">
                             <label className="control-label" htmlFor="TotalHours">TotalHours</label>
-                            <input required className="form-control" type="number" id="TotalHours" value={totalHours} onChange={(e) => { setTotalHours(e.target.value.toString()); setValidationError(""); }} />
+                            <input required className="form-control" type="number" id="TotalHours" value={totalHours} onChange={(e) => { setTotalHours(Number.parseInt(e.target.value)); setValidationError(""); }} />
                         </div>
                         <br />
                         <br />

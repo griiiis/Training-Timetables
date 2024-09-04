@@ -148,7 +148,7 @@ builder.Services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureModelBindi
 var app = builder.Build();
 //====================================================================
 
-SetupAppData(app);
+//SetupAppData(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
