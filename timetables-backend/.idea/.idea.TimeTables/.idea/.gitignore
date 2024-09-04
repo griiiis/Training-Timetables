@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 # Default ignored files
+=======
+﻿# Default ignored files
+>>>>>>> 732a132e72c31df56f0cea6ad054c62ed3dcbb8e
 /shelf/
 /workspace.xml
 # Rider ignored files
 /.idea.TimeTables.iml
+<<<<<<< HEAD
 /projectSettingsUpdater.xml
 /modules.xml
 /contentModel.xml
+=======
+/contentModel.xml
+/modules.xml
+/projectSettingsUpdater.xml
+>>>>>>> 732a132e72c31df56f0cea6ad054c62ed3dcbb8e
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
