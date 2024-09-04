@@ -1,11 +1,12 @@
 "use client"
+import { IContest } from "@/domain/IContest";
 import { IContestType } from "@/domain/IContestType";
-import { ILevel } from "@/domain/ILevel";
+import { ILevel } from "@/domain/ILevel"
 import { ILocation } from "@/domain/ILocation";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
 import { ITime } from "@/domain/ITime";
 import ContestService from "@/services/ContestService";
-import Link from "next/link";
+import Link from "next/link"
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -37,7 +38,6 @@ export default function Edit() {
 
     const loadData = async () => {
         const response = await ContestService.editContest(id.toString());
-
         if (response.data) {
             setContestName(response.data.contest.contestName);
             setDescription(response.data.contest.description)
@@ -46,7 +46,6 @@ export default function Edit() {
             setTotalHours(response.data.contest.totalHours.toString())
             setLocationId(response.data.contest.location.id)
             setContestTypeId(response.data.contest.contestType.id)
-
             setContestTypes(response.data.contestTypeList);
             setLocations(response.data.locationList)
             setPackages(response.data.packagesList)
@@ -65,34 +64,47 @@ export default function Edit() {
     };
 
     const editContest = async () => {
+        const contest :IContest = {
+            contestName: contestName,
+            id: id.toString(),
+            description: description,
+            from: from,
+            until: until,
+            totalHours: Number.parseInt(totalHours),
+            contestTypeId: undefined,
+            location: undefined,
+            contestGameTypes: []
+        }
         const contestData = {
             id : id,
             contestName: contestName,
-            description: description,
+            descrition: description,
             from: from,
             until: until,
             totalHours: totalHours,
             contestTypeId: contestTypeId,
-            locationId: locationId,
+            locatinId: locationId,
             selectedLevelIds: levelIds,
             selectedTimesIds: timesIds,
             selectedPackagesIds: packagesIds,
         };
         const response = await ContestService.putContest(id.toString(), contestData);
-        if (response.data) {
+        console.log(contestData)
+        if (response.data){
             router.push("/ContestAdmin/Contest");
-        }
+        
         if (response.errors && response.errors.length > 0) {
             setValidationError(response.errors[0]);
         }
     }
+}
 
     useEffect(() => { loadData() }, []);
 
     if (isLoading) return (<h1>Edit contest - LOADING</h1>)
     return (
         <>
-            <h1 className="middle">Create New Contest</h1>
+            <h1 className="middle">Edit Contest</h1>
             <hr />
             <br />
             <form>
@@ -101,7 +113,7 @@ export default function Edit() {
                     <div className="col-md-4">
                         <div className="form-group">
                             <label className="control-label" htmlFor="ContestName">Contest Name</label>
-                            <input className="form-control" type="text" id="ContestName" value={contestName} onChange={(e) => { setContestName(e.target.value); setValidationError(""); }} />
+                            <input className="form-control" type="text" id="ontestName" value={contestName} onChange={(e) => { setContestName(e.target.value); setValidationError(""); }} />
                         </div>
                         <br />
                         <div className="form-group">
