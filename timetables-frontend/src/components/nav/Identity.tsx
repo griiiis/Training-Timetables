@@ -33,7 +33,7 @@ const LoggedIn = ({ user} : { user: IUserInfo} ) => {
         const logOutData = {
             refreshToken: user.refreshToken
         };
-
+        localStorage.removeItem("userInfo");
         await AccountService.logout(logOutData);
         localStorage.removeItem("userInfo");
         router.push("/");

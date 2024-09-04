@@ -1,4 +1,5 @@
 ﻿using App.Contracts.DAL.Repositories;
+using App.DAL.DTO.Models;
 using AutoMapper;
 using APPDomain = App.Domain;
 using DALDTO = App.DAL.DTO;
@@ -9,6 +10,8 @@ namespace App.DAL.EF.Repositories;
 
 public class ContestRepository : BaseEntityRepository<APPDomain.Contest, DALDTO.Contest, AppDbContext>, IContestRepository
 {
+    
+    
     public ContestRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext, new DalDomainMapper<APPDomain.Contest,DALDTO.Contest>(mapper))
     {
     }
@@ -49,4 +52,5 @@ public class ContestRepository : BaseEntityRepository<APPDomain.Contest, DALDTO.
                 Any(a => a.AppUserId == userId))
             .Select(de => Mapper.Map(de));
     }
+    
 }

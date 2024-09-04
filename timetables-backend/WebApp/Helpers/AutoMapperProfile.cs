@@ -28,6 +28,7 @@ public class AutoMapperProfile : Profile
         CreateMap<App.DTO.v1_0.ContestPackage, App.BLL.DTO.ContestPackage>().ReverseMap();
         CreateMap<App.DTO.v1_0.ContestRole, App.BLL.DTO.ContestRole>().ReverseMap();
         CreateMap<App.DTO.v1_0.ContestUserRole, App.BLL.DTO.ContestUserRole>().ReverseMap();
+        CreateMap<App.DTO.v1_0.ContestEditModel, App.BLL.DTO.Models.ContestEditModel>().ReverseMap();
         
     }
     
