@@ -1,8 +1,6 @@
-import { IContestType } from "../../IContestType"
-import { ILevel } from "../../ILevel"
-import { ILocation } from "../../ILocation"
-import { IPackageGameTypeTime } from "../../IPackageGameTypeTime"
-import { ITime } from "../../ITime"
+import { IContest } from "@/domain/IContest";
+import { IContestType } from "@/domain/IContestType";
+import { ILocation } from "@/domain/ILocation";
 
 export interface IContestEditModel {
     "contest": {
@@ -12,21 +10,11 @@ export interface IContestEditModel {
         "from": string,
         "until": string,
         "totalHours": number,
-        "contestType": IContestType,
-        "location": ILocation,
+        "contestTypeId": string,
+        "locationId": string,
     },
-
-    "contestTypeList": IContestType[],
-    "locationList": ILocation[],
-    "timesList": ITime[],
-    "levelList": ILevel[],
-    "packagesList": IPackageGameTypeTime[],
-
-    "previousLevels": ILevel[],
-    "previousTimes": ITime[],
-    "previousPackages": IPackageGameTypeTime[],
     
-    "selectedLevelIds": string[],
-    "selectedTimesIds": string[],
-    "selectedPackagesIds": string[],
+    "levelIds": string[],
+    "timesIds": string[],
+    "packagesIds": string[],
 }

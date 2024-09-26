@@ -39,7 +39,7 @@ export default function Overview() {
 
     useEffect(() => { loadData() }, []);
 
-    if (isLoading) return (<h1>Create new contest - LOADING</h1>)
+    if (isLoading) return (<h1>Contest Overview - LOADING</h1>)
 
 
     return (

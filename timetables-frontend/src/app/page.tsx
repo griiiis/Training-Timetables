@@ -28,6 +28,8 @@ export default function Contest() {
     const contestResponse = await ContestService.getAll();
     const allUserPackages = await UserContestPackageService.getAll();
 
+    console.log(contestResponse.data)
+
     if (localStorage.getItem("userInfo") !== null) {
       const userContestPackagesResponse =
         await UserContestPackageService.getCurrentUserPackages();

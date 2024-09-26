@@ -8,6 +8,7 @@ export default class LevelService extends BaseService {
         super();
     }
 
+    // Returns all levels visible to current user
     static async getAll(): Promise<IResultObject<ILevel[]>> {
         return await this.get<ILevel[]>(`Levels`);
     }

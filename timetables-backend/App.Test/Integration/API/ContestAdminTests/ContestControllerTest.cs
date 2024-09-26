@@ -154,9 +154,9 @@ public class ContestControllerTest : IClassFixture<CustomWebApplicationFactory<P
                 LocationId = LocationId,
 
             },
-            SelectedLevelIds = levelId,
-            SelectedTimesIds = timeIds,
-            SelectedPackagesIds = packageIds,
+            LevelIds = levelId,
+            TimesIds = timeIds,
+            PackagesIds = packageIds,
         };
         
         var json = JsonConvert.SerializeObject(contest);

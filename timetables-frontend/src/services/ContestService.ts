@@ -1,7 +1,7 @@
 import { IResultObject } from "./IResultObject";
 import { IContest } from "@/domain/IContest";
 import BaseService from "./BaseService";
-import { IContestEditModel } from "@/domain/Models/IContestEditModel";
+import { IContestEditModel } from "@/domain/Models/Contests/IContestEditModel";
 
 export default class ContestService extends BaseService {
     private constructor() {
@@ -24,7 +24,7 @@ export default class ContestService extends BaseService {
         return await this.get<IContest>(`Contests/${contestId}`);
     }
 
-    static async editContest(contestId : string): Promise<IResultObject<IContestEditModel>> {
+    static async getEditContest(contestId : string): Promise<IResultObject<IContestEditModel>> {
         return await this.get<IContestEditModel>(`Contests/owner/edit/${contestId}`);
     }
 

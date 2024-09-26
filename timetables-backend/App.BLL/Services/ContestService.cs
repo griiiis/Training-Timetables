@@ -16,7 +16,6 @@ public class ContestService :
     private readonly BLLDalMapper<App.DAL.DTO.PackageGameTypeTime, PackageGameTypeTime> _packagesMapper;
     private readonly BLLDalMapper<App.DAL.DTO.Time, Time> _timesMapper;
     private readonly BLLDalMapper<App.DAL.DTO.Location, Location> _locationMapper;
-    private readonly BLLDalMapper<App.DAL.DTO.ContestType, ContestType> _contestTypeMapper;
 
     public ContestService(IAppUnitOfWork uow, IContestRepository repository, IMapper mapper)
         : base(uow, repository, new BLLDalMapper<App.DAL.DTO.Contest, App.BLL.DTO.Contest>(mapper))
@@ -24,7 +23,6 @@ public class ContestService :
         _levelMapper = new BLLDalMapper<App.DAL.DTO.Level, Level>(mapper);
         _packagesMapper = new BLLDalMapper<App.DAL.DTO.PackageGameTypeTime, PackageGameTypeTime>(mapper);
         _timesMapper = new BLLDalMapper<App.DAL.DTO.Time, Time>(mapper);
-        _contestTypeMapper = new BLLDalMapper<App.DAL.DTO.ContestType, ContestType>(mapper);
         _locationMapper = new BLLDalMapper<App.DAL.DTO.Location, Location>(mapper);
     }
 
@@ -48,31 +46,20 @@ public class ContestService :
         var contestInfo = await FirstOrDefaultAsync(contestId, userId);
         
         var previousLevels = contestInfo!.ContestLevels
-            .Select(e => e.Level).ToList();
+            .Select(e => e.Level!.Id).ToList();
 
         var previousPackages = contestInfo.ContestPackages
-            .Select(e => e.PackageGameTypeTime).ToList();
+            .Select(e => e.PackageGameTypeTime!.Id).ToList();
 
         var previousTimes = contestInfo.ContestTimes
-            .Select(e => e.Time).ToList();
+            .Select(e => e.Time!.Id).ToList();
 
         var vm = new ContestEditModel()
         {
             Contest = contestInfo,
-            ContestTypeList = (await Uow.ContestTypes.GetAllAsync(userId))
-                .Select(de => _contestTypeMapper.Map(de))
-                .ToList(),
-            LocationList = (await Uow.Locations.GetAllAsync(userId)).Select(de => _locationMapper.Map(de))
-                .ToList(),
-            LevelList = (await Uow.Levels.GetAllAsync(userId)).Select(de => _levelMapper.Map(de)).ToList(),
-            TimesList =
-                (await Uow.Times.GetAllAsync(userId)).Select(de => _timesMapper.Map(de)).ToList(),
-            PackagesList =
-                (await Uow.PackageGameTypeTimes.GetAllAsync(userId))
-                .Select(de => _packagesMapper.Map(de)).ToList(),
-            PreviousLevels = previousLevels,
-            PreviousPackages = previousPackages!,
-            PreviousTimes = previousTimes!,
+            LevelIds = previousLevels,
+            PackagesIds = previousPackages!,
+            TimesIds = previousTimes!,
         };
         return vm;
     }
@@ -111,7 +98,7 @@ public class ContestService :
         var gameTypes = new HashSet<Guid>();
         var allPackages = (await Uow.PackageGameTypeTimes.GetAllAsync(default)).ToList();
 
-        foreach (var packageId in contest.SelectedPackagesIds!)
+        foreach (var packageId in contest.PackagesIds!)
         {
             var gameTypeId = allPackages
                 .FirstOrDefault(e => e.Id.Equals(packageId) && !gameTypes.Contains(e.GameTypeId))
@@ -133,17 +120,7 @@ public class ContestService :
             Uow.ContestGameTypes.Add(contestGameType);
         }
 
-        foreach (var timeId in contest.SelectedTimesIds!)
-        {
-            var times = new App.DAL.DTO.ContestTime()
-            {
-                ContestId = contest.Contest.Id,
-                TimeId = timeId
-            };
-            Uow.ContestTimes.Add(times);
-        }
-
-        foreach (var packageId in contest.SelectedPackagesIds!)
+        foreach (var packageId in contest.PackagesIds!)
         {
             var package = new App.DAL.DTO.ContestPackage()
             {
@@ -153,7 +130,17 @@ public class ContestService :
             Uow.ContestPackages.Add(package);
         }
 
-        foreach (var levelId in contest.SelectedLevelIds!)
+        foreach (var timeId in contest.TimesIds!)
+        {
+            var times = new App.DAL.DTO.ContestTime()
+            {
+                ContestId = contest.Contest.Id,
+                TimeId = timeId
+            };
+            Uow.ContestTimes.Add(times);
+        }
+
+        foreach (var levelId in contest.LevelIds!)
         {
             var contestLevel = new App.DAL.DTO.ContestLevel()
             {

@@ -33,6 +33,7 @@ export default function Create() {
     const [packagesIds, setPackagesIds] = useState(Array());
     const [times, setTimes] = useState<ITime[]>([]);
     const [timesIds, setTimesIds] = useState(Array());
+    
     const [validationError, setValidationError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 

@@ -3,7 +3,7 @@
 public class ContestEditModel
 {
     public Contest Contest { get; set; } = default!;
-    public List<Guid>? SelectedLevelIds { get; set; }
-    public List<Guid>? SelectedTimesIds { get; set; }
-    public List<Guid>? SelectedPackagesIds { get; set; }
+    public List<Guid>? LevelIds { get; set; }
+    public List<Guid>? TimesIds { get; set; }
+    public List<Guid>? PackagesIds { get; set; }
 }

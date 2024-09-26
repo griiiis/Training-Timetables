@@ -26,7 +26,8 @@ export default function Delete() {
     }
 
     useEffect(() => { getContestDetails() }, [])
-    if (isLoading) return (<h1>Delete contest - LOADING</h1>)
+
+    if (isLoading) return (<h1>Delete Contest - LOADING</h1>)
 
     return (
         <>

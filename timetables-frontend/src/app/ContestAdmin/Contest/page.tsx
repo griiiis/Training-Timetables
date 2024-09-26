@@ -19,6 +19,8 @@ export default function Contest() {
 
     const loadData = async () => {
         const contestresponse = await ContestService.getAllOwnerContests();
+        console.log(contestresponse.data)
+
         if (contestresponse.data) {
             let array = Array<EachContest>();
             for (const element of contestresponse.data) {

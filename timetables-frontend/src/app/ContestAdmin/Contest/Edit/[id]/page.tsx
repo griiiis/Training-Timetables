@@ -1,11 +1,16 @@
 "use client"
-import { IContest } from "@/domain/IContest";
 import { IContestType } from "@/domain/IContestType";
 import { ILevel } from "@/domain/ILevel"
 import { ILocation } from "@/domain/ILocation";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
 import { ITime } from "@/domain/ITime";
+import { IContestEditModel } from "@/domain/Models/Contests/IContestEditModel";
 import ContestService from "@/services/ContestService";
+import ContestTypeService from "@/services/ContestTypeService";
+import LevelService from "@/services/LevelService";
+import LocationService from "@/services/LocationService";
+import PackageGameTypeTimeService from "@/services/PackageGameTypeTimeService";
+import TimeService from "@/services/TimeService";
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,81 +20,79 @@ export default function Edit() {
     const router = useRouter();
     const [contestName, setContestName] = useState("");
     const [description, setDescription] = useState("");
-    const [from, setFrom] = useState('');
-    const [until, setUntil] = useState('');
+    const [from, setFrom] = useState("");
+    const [until, setUntil] = useState("");
     const [totalHours, setTotalHours] = useState("0");
     const [contestTypeId, setContestTypeId] = useState("");
+    const [locationId, setLocationId] = useState("");
+
+    const [previousLevelIds, setPreviousLevelIds] = useState(Array());
+    const [previousPackagesIds, setPreviousPackagesIds] = useState(Array());
+    const [previousTimesIds, setPreviousTimesIds] = useState(Array());
+
+
     const [contestTypes, setContestTypes] = useState<IContestType[]>([]);
     const [locations, setLocations] = useState<ILocation[]>([]);
-    const [locationId, setLocationId] = useState("");
     const [levels, setLevels] = useState<ILevel[]>([]);
-    const [levelIds, setLevelIds] = useState(Array());
     const [packages, setPackages] = useState<IPackageGameTypeTime[]>([]);
-    const [packagesIds, setPackagesIds] = useState(Array());
     const [times, setTimes] = useState<ITime[]>([]);
-    const [timesIds, setTimesIds] = useState(Array());
-
-    const [previousLevels, setPreviousLevels] = useState<ILevel[]>([]);
-    const [previousTimes, setPreviousTimes] = useState<ITime[]>([]);
-    const [previousPackages, setPreviousPackages] = useState<IPackageGameTypeTime[]>([]);
 
     const [validationError, setValidationError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
-        const response = await ContestService.editContest(id.toString());
-        if (response.data) {
-            setContestName(response.data.contest.contestName);
-            setDescription(response.data.contest.description)
-            setFrom(response.data.contest.from.toString())
-            setUntil(response.data.contest.until.toString())
-            setTotalHours(response.data.contest.totalHours.toString())
-            setLocationId(response.data.contest.location.id)
-            setContestTypeId(response.data.contest.contestType.id)
-            setContestTypes(response.data.contestTypeList);
-            setLocations(response.data.locationList)
-            setPackages(response.data.packagesList)
-            setLevels(response.data.levelList)
-            setTimes(response.data.timesList)
+        const responseContest = await ContestService.getEditContest(id.toString());
+        const responseLevels = await LevelService.getAll();
+        const responseTimes = await TimeService.getAll();
+        const responsePackages = await PackageGameTypeTimeService.getAll();
+        const responseLocations = await LocationService.getAll();
+        const responseContestTypes = await ContestTypeService.getAll();
 
-            setLevelIds(response.data.previousLevels.map(e => e.id));
-            setPackagesIds(response.data.previousPackages.map(e => e.id));
-            setTimesIds(response.data.previousTimes.map(e => e.id));
+        if (responseContest.data && responseLevels.data && responseTimes.data && responsePackages.data && responseLocations.data && responseContestTypes.data) {
+            // Previous data about the contest
+            setContestName(responseContest.data.contest.contestName);
+            setDescription(responseContest.data.contest.description)
+            setFrom(responseContest.data.contest.from.toString())
+            setUntil(responseContest.data.contest.until.toString())
+            setTotalHours(responseContest.data.contest.totalHours.toString())
+            setLocationId(responseContest.data.contest.locationId)
+            setContestTypeId(responseContest.data.contest.contestTypeId)
 
-            setPreviousLevels(response.data.previousLevels);
-            setPreviousPackages(response.data.previousPackages);
-            setPreviousTimes(response.data.previousTimes);
+            setPreviousLevelIds(responseContest.data.levelIds);
+            setPreviousPackagesIds(responseContest.data.packagesIds);
+            setPreviousTimesIds(responseContest.data.timesIds);
+
+
+            // All other data (Levels, Times, Packages, Locations, ContestTypes)
+            setContestTypes(responseContestTypes.data);
+            setLocations(responseLocations.data)
+            setPackages(responsePackages.data)
+            setLevels(responseLevels.data)
+            setTimes(responseTimes.data)
             setIsLoading(false);
         }
     };
 
     const editContest = async () => {
-        const contest :IContest = {
-            contestName: contestName,
-            id: id.toString(),
-            description: description,
-            from: from,
-            until: until,
-            totalHours: Number.parseInt(totalHours),
-            contestTypeId: undefined,
-            location: undefined,
-            contestGameTypes: []
+        const contestEditModel : IContestEditModel = {
+            contest: {
+                contestName: contestName,
+                id: id.toString(),
+                description: description,
+                from: from,
+                until: until,
+                totalHours: Number.parseInt(totalHours),
+                contestTypeId: contestTypeId,
+                locationId: locationId,
+            },
+            levelIds: previousLevelIds,
+            timesIds: previousTimesIds,
+            packagesIds: previousPackagesIds,
+        
         }
-        const contestData = {
-            id : id,
-            contestName: contestName,
-            descrition: description,
-            from: from,
-            until: until,
-            totalHours: totalHours,
-            contestTypeId: contestTypeId,
-            locatinId: locationId,
-            selectedLevelIds: levelIds,
-            selectedTimesIds: timesIds,
-            selectedPackagesIds: packagesIds,
-        };
-        const response = await ContestService.putContest(id.toString(), contestData);
-        console.log(contestData)
+        console.log(contestEditModel)
+
+        const response = await ContestService.putContest(id.toString(), contestEditModel);
         if (response.data){
             router.push("/ContestAdmin/Contest");
         
@@ -135,20 +138,21 @@ export default function Edit() {
                         <br />
                         <div className="form-group">
                             <label className="control-label" htmlFor="Levels">Levels</label>
-                            {previousLevels ? (
+                            {previousLevelIds ? (
                                 <>
-                                    <select multiple className="form-control" required onChange={(e) => { setLevelIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
+                                    <select multiple className="form-control" required onChange={(e) => { setPreviousLevelIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
                                         
-                                        {levels.map((level) => (
-                                            <option key={level.id} value={level.id} selected={previousLevels.some(e => e.id === level.id)}>
+                                        {levels.map((level) => {
+                                            return (
+                                            <option key={level.id} value={level.id} selected={previousLevelIds.some(e => e === level.id)}>
                                                 {level.title}
                                             </option>
-                                        ))}
+                                        );})}
                                     </select>
                                 </>
                             ) : (
                                 <>
-                                    <select multiple className="form-control" onChange={(e) => { setLevelIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}
+                                    <select multiple className="form-control" onChange={(e) => { setPreviousLevelIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}
                                     >{levels.map((level) => {
                                         return (
                                             <option key={level.id} value={level.id}>
@@ -185,12 +189,12 @@ export default function Edit() {
                         <br />
                         <div className="form-group">
                             <label className="control-label" htmlFor="Packages">Packages</label>
-                            {previousPackages ? (
+                            {previousPackagesIds ? (
                                 <>
-                                    <select multiple className="form-control" required onChange={(e) => { setPackagesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
+                                    <select multiple className="form-control" required onChange={(e) => { setPreviousPackagesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
                                         
                                         {packages.map((packagee) => (
-                                            <option key={packagee.id} value={packagee.id} selected={previousPackages.some(e => e.id === packagee.id)}>
+                                            <option key={packagee.id} value={packagee.id} selected={previousPackagesIds.some(e => e === packagee.id)}>
                                                 {packagee.packageGtName}
                                             </option>
                                         ))}
@@ -198,7 +202,7 @@ export default function Edit() {
                                 </>
                             ) : (
                                 <>
-                                    <select required multiple className="form-control" onChange={(e) => { setPackagesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
+                                    <select required multiple className="form-control" onChange={(e) => { setPreviousPackagesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
                                         {packages.map((packagee) => {
                                 return (
                                     <option key={packagee.id} value={packagee.id}>
@@ -226,12 +230,12 @@ export default function Edit() {
                         <br />
                         <div className="form-group">
                             <label className="control-label" htmlFor="Times">Times</label>
-                            {previousLevels ? (
+                            {previousTimesIds ? (
                                 <>
-                                    <select multiple className="form-control" required onChange={(e) => { setTimesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
+                                    <select multiple className="form-control" required onChange={(e) => { setPreviousTimesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
                                         
                                         {times.map((time) => (
-                                            <option key={time.id} value={time.id} selected={previousTimes.some(e => e.id === time.id)}>
+                                            <option key={time.id} value={time.id} selected={previousTimesIds.some(e => e === time.id)}>
                                                 {`${time.from} - ${time.until}`}
                                             </option>
                                         ))}
@@ -239,7 +243,7 @@ export default function Edit() {
                                 </>
                             ) : (
                                 <>
-                                    <select multiple className="form-control" onChange={(e) => { setTimesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
+                                    <select multiple className="form-control" onChange={(e) => { setPreviousTimesIds(Array.from(e.target.selectedOptions, option => option.value)); setValidationError(""); }}>
                                         {times.map((time) => {
                                 return (
                                     <option key={time.id} value={time.id}>
