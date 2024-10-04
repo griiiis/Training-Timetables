@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 export default function Overview() {
     let { id } = useParams();
+    
     const [teams, setTeams] = useState<ITeam[]>([]);
     const [userContestPackages, setUserContestPackages] = useState<IUserContestPackage[]>([]);
     const [gameTypes, setGameTypes] = useState<IGameType[]>([]);
