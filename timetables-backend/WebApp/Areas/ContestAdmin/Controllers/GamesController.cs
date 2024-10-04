@@ -54,7 +54,7 @@ namespace WebApp.Areas.ContestAdmin.Controllers
         {
             var contest = _bll.Contests.FirstOrDefaultAsync(contestId).Result!;
             var allUsersWithoutTrainers =
-                (await _bll.UserContestPackages.GetContestUsersWithoutTeachers(contestId)).ToList();
+                (await _bll.UserContestPackages.GetContestParticipants(contestId)).ToList();
             var dictionary = new Dictionary<Guid, int>();
             foreach (var gameType in _bll.GameTypes.GetAllCurrentContestAsync(contestId).Result.ToList())
             {

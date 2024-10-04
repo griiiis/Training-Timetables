@@ -67,7 +67,7 @@ namespace WebApp.Controllers
                 {
                     Contest = contest,
                     GameTypes = (await _bll.GameTypes.GetAllCurrentContestAsync(contest.Id)).ToList(),
-                    NumberOfParticipants = _bll.UserContestPackages.GetContestUsersWithoutTeachers(contest.Id).Result
+                    NumberOfParticipants = _bll.UserContestPackages.GetContestParticipants(contest.Id).Result
                         .Count(),
                     ifAlreadyJoined = false,
                 };
@@ -82,7 +82,7 @@ namespace WebApp.Controllers
                 {
                     Contest = contest,
                     GameTypes = (await _bll.GameTypes.GetAllCurrentContestAsync(contest.Id)).ToList(),
-                    NumberOfParticipants = _bll.UserContestPackages.GetContestUsersWithoutTeachers(contest.Id).Result
+                    NumberOfParticipants = _bll.UserContestPackages.GetContestParticipants(contest.Id).Result
                         .Count(),
                     ifAlreadyJoined = _signInManager.IsSignedIn(User) && _bll.UserContestPackages.IfAlreadyJoined(contest.Id, Guid.Parse(_userManager.GetUserId(User)!)),
                 };

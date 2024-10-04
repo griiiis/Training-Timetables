@@ -57,18 +57,68 @@ namespace WebApp.ApiControllers
         }
 
         /// <summary>
-        /// Returns all contests visible to all users
+        /// Returns front page contests
         /// </summary>
         /// <returns>List of contests</returns>
         [HttpGet]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType<IEnumerable<Contest>>((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<List<Contest>>> GetContests()
+        [ProducesResponseType<List<FrontPageContestsDTO>>((int)HttpStatusCode.OK)]
+        public async Task<ActionResult<List<FrontPageContestsDTO>>> GetFrontPageContests()
         {
+            var allContests = new FrontPageContestsDTO
+            {
+                CurrentContestsDTO = new List<FrontPageContestDTO>(),
+                ComingContestsDTO = new List<FrontPageContestDTO>()
+            };
+            
             var res = (await _bll.Contests.GetAllAsync(default))
                 .Select(e => _mapper.Map(e)).ToList();
-            return Ok(res);
+            
+            // Current contests
+            foreach (var contest in res.Where(e => e!.From < DateTime.Now && e.Until > DateTime.Now))
+            {
+                var currentContestDTO = new FrontPageContestDTO
+                {
+                    Id = contest!.Id,
+                    ContestName = contest.ContestName,
+                    Description = contest.Description,
+                    TotalHours = contest.TotalHours,
+                    From = contest.From,
+                    Until = contest.Until,
+                    LocationName = contest.Location!.LocationName,
+                    ContestTypeName = contest.ContestType!.ContestTypeName,
+                    NumberOfParticipants = _bll.UserContestPackages.GetContestParticipants(contest.Id).Result.Count(),
+
+                    ContestGameTypes = contest.ContestGameTypes.Select(e => e.GameType!.GameTypeName)
+                        .ToList()
+                };
+                allContests.CurrentContestsDTO.Add(currentContestDTO);
+            }
+            
+            // Coming contests
+            foreach (var contest in res.Where(e => e!.From > DateTime.Now))
+            {
+                var comingContestDTO = new FrontPageContestDTO
+                {
+                    Id = contest!.Id,
+                    ContestName = contest.ContestName,
+                    Description = contest.Description,
+                    TotalHours = contest.TotalHours,
+                    From = contest.From,
+                    Until = contest.Until,
+                    LocationName = contest.Location!.LocationName,
+                    ContestTypeName = contest.ContestType!.ContestTypeName,
+                    NumberOfParticipants = _bll.UserContestPackages.GetContestParticipants(contest.Id).Result.Count(),
+
+                    ContestGameTypes = contest.ContestGameTypes.Select(e => e.GameType!.GameTypeName)
+                        .ToList()
+                };
+                allContests.ComingContestsDTO.Add(comingContestDTO);
+                
+            }
+            
+            return Ok(allContests);
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ namespace WebApp.Areas.ContestAdmin.Controllers
                 Contest = contest,
                 Teams = _bll.Teams.GetAllCurrentContestAsync(contest.Id).Result.ToList(),
                 UserContestPackages =
-                    _bll.UserContestPackages.GetContestUsersWithoutTeachers(contest.Id).Result.ToList(),
+                    _bll.UserContestPackages.GetContestParticipants(contest.Id).Result.ToList(),
                 GameTypes = _bll.GameTypes.GetAllCurrentContestAsync(contest.Id).Result.ToList(),
                 Teachers = _bll.UserContestPackages.GetContestTeachers(contest.Id).Result.ToList(),
                 Levels = _bll.Levels.GetAllCurrentContestAsync(contest.Id).Result.ToList(),

@@ -90,7 +90,7 @@ public class UserContestPackageRepository :
             .Select(de => Mapper.Map(de));
     }
     
-    public async Task<IEnumerable<DALDTO.UserContestPackage>> GetContestUsersWithoutTeachers(Guid contestId)
+    public async Task<IEnumerable<DALDTO.UserContestPackage>> GetContestParticipants(Guid contestId)
     {
         var rolePreferencesAppUserIds = await CreateQuery().SelectMany(e => e.PackageGameTypeTime!.GameType!.RolePreferences.Where(e => e.ContestId.Equals(contestId))).Select(e => e.AppUserId).ToListAsync();
         

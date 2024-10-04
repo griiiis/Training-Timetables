@@ -1,69 +1,45 @@
 "use client";
-import StaticExample from "@/components/JoinContestModal";
 import JoinContestModal from "@/components/JoinContestModal";
 import ContestTable from "@/components/Search";
 import { IContest } from "@/domain/IContest";
 import { IUserContestPackage } from "@/domain/IUserContestPackage";
 import ContestService from "@/services/ContestService";
 import UserContestPackageService from "@/services/UserContestPackageService";
+import { IFrontPageContestsDTO } from "@/domain/DTOs/Contests/IFrontPageContestsDTO";
 import Link from "next/link";
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { useEffect, useState } from "react";
 
 export default function Contest() {
+
   const [isLoading, setIsLoading] = useState(true);
-  const [allUserContestPackages, setAllUserContestPackages] = useState<IUserContestPackage[]>([]);
   const [currentUserPackages, setCurrentUserPackages] = useState<IUserContestPackage[]>([]);
 
-  const [currentContests, setCurrentContests] = useState<IContest[]>([]);
-  const [comingContests, setComingContests] = useState<IContest[]>([]);
-
   const [searchedContests, setSearchedContests] = useState<IContest[]>([]);
-  const [allContests, setAllContests] = useState<IContest[]>([]);
 
-  let [searchInput, setSearchInput] = useState("");
   const [locationInput, setLocationInput] = useState<boolean>(false);
   const [contestTypeInput, setContestTypeInput] = useState<boolean>(false);
   const [gameTypeInput, setGameTypeInput] = useState<boolean>(false);
 
-  const loadData = async () => {
-    const contestResponse = await ContestService.getAll();
-    const allUserPackages = await UserContestPackageService.getAll();
+  let [searchInput, setSearchInput] = useState("");
 
+  const [allContests, setContests] = useState<IFrontPageContestsDTO>();
+  const loadData = async () => {
     if (localStorage.getItem("userInfo") !== null) {
       const userContestPackagesResponse =
         await UserContestPackageService.getCurrentUserPackages();
       setCurrentUserPackages(userContestPackagesResponse.data!);
     }
 
-    if (contestResponse.data && allUserPackages.data) {
+    const contestResponse = await ContestService.getFrontPageContests();
 
-      const currentContests = contestResponse.data
-        .filter((contest) => {
-          const fromDate = new Date(contest.from);
-          const untilDate = new Date(contest.until);
-          const now = new Date();
-          return fromDate < now && untilDate > now;
-        })
-        .slice(0, 2);
-
-      setCurrentContests(currentContests);
-
-      const comingContests = contestResponse.data.filter((contest) => {
-        const fromDate = new Date(contest.from);
-        const now = new Date();
-        return fromDate > now;
-      });
-      setComingContests(comingContests);
-      setAllUserContestPackages(allUserPackages.data);
-      setAllContests(contestResponse.data);
-
-      setSearchedContests(contestResponse.data.slice(0,3))
-
+    if (contestResponse.data) {
+      setContests(contestResponse.data);
       setIsLoading(false);
     }
   };
 
+  /*
   const SearchData = () => {
     let searchedContests = allContests;
 
@@ -82,8 +58,9 @@ export default function Contest() {
         }
       }
       setSearchedContests(searchedContests)
-    
   }
+      */
+
   useEffect(() => {
     loadData();
   }, []);
@@ -95,61 +72,57 @@ export default function Contest() {
       <h1 className="middle">Contests</h1>
       <br />
 
-      {currentContests.length > 0 && (
+      {allContests!.currentContestsDTO.length > 0 && (
         <div className="ended-contests">
           <h2 className="section-title">Current Contests</h2>
           <div className="row">
-            {currentContests.map((contest) => {
+            {allContests!.currentContestsDTO.map((contestDTO) => {
               return (
-                <React.Fragment key={`${contest.id}`}>
+                <React.Fragment key={`${contestDTO.id}`}>
                   <div className="col-md-6 mb-4">
                     <div className="card ended-contest-card">
                       <div className="card-body">
                         <div className="row">
                           <div className="col-md-10">
                             <h2 className="contest-name">
-                              {contest.contestName}
+                              {contestDTO.contestName}
                             </h2>
                             <p className="contest-duration">
-                              {new Date(contest.from).toDateString() +
+                              {new Date(contestDTO.from).toDateString() +
                                 " " +
-                                new Date(contest.from)
+                                new Date(contestDTO.from)
                                   .toTimeString()
                                   .substring(0, 8)}
                               -{" "}
-                              {new Date(contest.until).toDateString() +
+                              {new Date(contestDTO.until).toDateString() +
                                 " " +
-                                new Date(contest.until)
+                                new Date(contestDTO.until)
                                   .toTimeString()
                                   .substring(0, 8)}
                             </p>
                             <p className="contest-detail">
                               <strong>Location:</strong>{" "}
-                              {contest.location.locationName}
+                              {contestDTO.locationName}
                             </p>
                             <p className="contest-detail">
-                              <strong>Total Hours:</strong> {contest.totalHours}
+                              <strong>Total Hours:</strong> {contestDTO.totalHours}
                             </p>
                             <p className="contest-detail">
                               <strong>Contest Type:</strong>{" "}
-                              {contest.contestType.contestTypeName}
+                              {contestDTO.contestTypeName}
                             </p>
                             <p className="contest-detail">
                               <strong>Number of Participants:</strong>{" "}
-                              {
-                                allUserContestPackages.filter(
-                                  (e) => e.contestId === contest.id
-                                ).length
-                              }
+                              {contestDTO.numberOfParticipants}
                             </p>
                             <p className="contest-detail">
                               <strong>Game Types:</strong>{" "}
-                              {contest.contestGameTypes.map(
+                              {contestDTO.contestGameTypes.map(
                                 (gameType, index) => (
                                   <span key={index}>
-                                    {gameType.gameType.gameTypeName}
+                                    {gameType}
                                     {index !==
-                                    contest.contestGameTypes.length - 1
+                                    contestDTO.contestGameTypes.length - 1
                                       ? ", "
                                       : ""}
                                   </span>
@@ -169,61 +142,57 @@ export default function Contest() {
         </div>
       )}
 
-      {comingContests.length > 0 && (
+      {allContests!.comingContestsDTO.length > 0 && (
         <div className="ended-contests">
           <h2 className="middle">Coming Contests</h2>
           <div className="row">
-            {comingContests.map((contest) => {
+            {allContests!.comingContestsDTO.map((contestDTO) => {
               return (
-                <React.Fragment key={`${contest.id}`}>
+                <React.Fragment key={`${contestDTO.id}`}>
                   <div className="col-md-6 mb-4">
                     <div className="card ended-contest-card">
                       <div className="card-body">
                         <div className="row">
                           <div className="col-md-10">
                             <h2 className="contest-name">
-                              {contest.contestName}
+                              {contestDTO.contestName}
                             </h2>
                             <p className="contest-duration">
-                              {new Date(contest.from).toDateString() +
+                              {new Date(contestDTO.from).toDateString() +
                                 " " +
-                                new Date(contest.from)
+                                new Date(contestDTO.from)
                                   .toTimeString()
                                   .substring(0, 8)}
                               -{" "}
-                              {new Date(contest.until).toDateString() +
+                              {new Date(contestDTO.until).toDateString() +
                                 " " +
-                                new Date(contest.until)
+                                new Date(contestDTO.until)
                                   .toTimeString()
                                   .substring(0, 8)}
                             </p>
                             <p className="contest-detail">
                               <strong>Location:</strong>{" "}
-                              {contest.location.locationName}
+                              {contestDTO.locationName}
                             </p>
                             <p className="contest-detail">
-                              <strong>Total Hours:</strong> {contest.totalHours}
+                              <strong>Total Hours:</strong> {contestDTO.totalHours}
                             </p>
                             <p className="contest-detail">
                               <strong>Contest Type:</strong>{" "}
-                              {contest.contestType.contestTypeName}
+                              {contestDTO.contestGameTypes}
                             </p>
                             <p className="contest-detail">
                               <strong>Number of Participants:</strong>{" "}
-                              {
-                                allUserContestPackages.filter(
-                                  (e) => e.contestId === contest.id
-                                ).length
-                              }
+                              {contestDTO.numberOfParticipants}
                             </p>
                             <p className="contest-detail">
                               <strong>Game Types:</strong>{" "}
-                              {contest.contestGameTypes.map(
+                              {contestDTO.contestGameTypes.map(
                                 (gameType, index) => (
                                   <span key={index}>
-                                    {gameType.gameType.gameTypeName}
+                                    {gameType}
                                     {index !==
-                                    contest.contestGameTypes.length - 1
+                                    contestDTO.contestGameTypes.length - 1
                                       ? ", "
                                       : ""}
                                   </span>
@@ -234,7 +203,7 @@ export default function Contest() {
                             {localStorage.getItem("userInfo") !== null &&
                             currentUserPackages !== undefined &&
                             currentUserPackages.filter(
-                              (e) => e.contestId === contest.id
+                              (e) => e.contestId === contestDTO.id
                             ).length > 0 ? (
                               <div className="contest-actions">
                                 <button className="btn btn-success" disabled>
@@ -251,7 +220,7 @@ export default function Contest() {
                                     Join The Contest!
                                   </Link>
                                 ) : (
-                                  <JoinContestModal contestId={contest.id}/>
+                                  <JoinContestModal contestId={contestDTO.id}/>
                                 )}
                               </div>
                             )}
@@ -321,8 +290,11 @@ export default function Contest() {
           <label className="control-label" htmlFor="GameType">
             GameType
           </label>
+          
         </div>
-        <button onClick={(e) => { SearchData(), e.preventDefault(); }} type="submit" className="btn btn-primary">Search</button>
+          {/*
+         <button onClick={(e) => { SearchData(), e.preventDefault(); }} type="submit" className="btn btn-primary">Search</button>
+         -*/}
       </form>
 
       <ContestTable searchedContests={searchedContests} />

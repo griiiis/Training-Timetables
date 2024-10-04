@@ -119,7 +119,7 @@ namespace WebApp.Controllers
             {
                 ContestId = contestId,
                 TeamId = teamId,
-                UserContestPackageSelectList = (await _bll.UserContestPackages.GetContestUsersWithoutTeachers(contestId))
+                UserContestPackageSelectList = (await _bll.UserContestPackages.GetContestParticipants(contestId))
                     .Where(e => !users.Contains(e.AppUserId))
                     .Select(e => new SelectListItem() {Text = e.AppUser!.FirstName + ' ' + e.AppUser!.LastName , Value = e.Id.ToString()}).ToList()
             };

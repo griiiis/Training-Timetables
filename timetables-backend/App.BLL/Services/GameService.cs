@@ -77,7 +77,7 @@ public class GameService : BaseEntityService<App.DAL.DTO.Game, App.BLL.DTO.Game,
                         else
                         {
                             gamesCountPerTime = (int)Math.Ceiling((decimal)peopleCount / playersPerCourt);
-                            thisGameTypeAllTeams = Uow.UserContestPackages.GetContestUsersWithoutTeachers(contestId).Result.Select(e => e.Team)
+                            thisGameTypeAllTeams = Uow.UserContestPackages.GetContestParticipants(contestId).Result.Select(e => e.Team)
                                 .Where(g => g!.GameTypeId == gameTypes[i].Id).ToList();
                         }
 

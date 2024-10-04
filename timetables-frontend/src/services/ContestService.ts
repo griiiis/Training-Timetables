@@ -7,14 +7,15 @@ import { IInformationContestDTO } from "@/domain/DTOs/Contests/IInformationConte
 import BaseService from "./BaseService";
 import { IMyContestsDTO } from "@/domain/DTOs/Contests/IMyContestsDTO";
 import { ICreateContestDTO } from "@/domain/DTOs/Contests/ICreateContestDTO";
+import { IFrontPageContestsDTO } from "@/domain/DTOs/Contests/IFrontPageContestsDTO";
 
 export default class ContestService extends BaseService {
     private constructor() {
         super();
     }
 
-    static async getAll(): Promise<IResultObject<IContest[]>> {
-        return await this.get<IContest[]>("Contests");
+    static async getFrontPageContests(): Promise<IResultObject<IFrontPageContestsDTO>> {
+        return await this.get<IFrontPageContestsDTO>("Contests");
     }
 
     static async getUserContests(): Promise<IResultObject<IMyContestsDTO>> {

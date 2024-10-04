@@ -44,9 +44,9 @@ public class UserContestPackageService : BaseEntityService<App.DAL.DTO.UserConte
     {
         return (await Repository.GetContestTeammates(contestId, teamId)).Select(de => Mapper.Map(de)!);
     }
-    public async Task<IEnumerable<UserContestPackage>> GetContestUsersWithoutTeachers(Guid contestId)
+    public async Task<IEnumerable<UserContestPackage>> GetContestParticipants(Guid contestId)
     {
-        return (await Repository.GetContestUsersWithoutTeachers(contestId)).Select(de => Mapper.Map(de)!);
+        return (await Repository.GetContestParticipants(contestId)).Select(de => Mapper.Map(de)!);
     }
     
     public bool AnyTeams(Guid contestId)
