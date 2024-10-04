@@ -76,7 +76,6 @@ export default function Create() {
         const teamsResponse = await TeamService.getCurrentContestTeams(id.toString());
 
         if (courtResponse.data && gameTypeResponse.data && levelResponse.data && timesResponse.data && userTeamResponse.data && contestResponse.data && trainersResponse.data && teamsResponse.data) {
-            console.log(teamsResponse.data)
             setCourts(courtResponse.data);
             setGameTypes(gameTypeResponse.data);
             setTimes(timesResponse.data);

@@ -1,4 +1,5 @@
 "use client"
+import { IOwnerContestsDTO } from "@/domain/DTOs/Contests/IOwnerContestsDTO";
 import { IContest } from "@/domain/IContest";
 import ContestService from "@/services/ContestService";
 import GameService from "@/services/GameService";
@@ -8,18 +9,19 @@ import React from "react";
 import {useEffect, useState } from "react";
 
 export default function Contest() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [eachContest, setEachContest] = useState<EachContest[]>([]);
 
     interface EachContest {
-        contest: IContest,
+        contest: IOwnerContestsDTO,
         anyGames: boolean,
         anyTeams: boolean
     }
 
+    const [isLoading, setIsLoading] = useState(true);
+    const [eachContest, setEachContest] = useState<EachContest[]>([]);
+
+
     const loadData = async () => {
         const contestresponse = await ContestService.getAllOwnerContests();
-        console.log(contestresponse.data)
 
         if (contestresponse.data) {
             let array = Array<EachContest>();
@@ -84,10 +86,10 @@ export default function Contest() {
                                         {item.contest.totalHours}
                                     </td>
                                     <td>
-                                        {item.contest.contestType.contestTypeName}
+                                        {item.contest.contestTypeName}
                                     </td>
                                     <td>
-                                        {item.contest.location.locationName}
+                                        {item.contest.locationName}
                                     </td>
                                     <td>
                                         <Link className="btn btn-success" href={`/ContestAdmin/Contest/Overview/${item.contest.id}`}>Overview</Link>

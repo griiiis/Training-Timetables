@@ -122,9 +122,8 @@ namespace WebApp.ApiControllers
             return Ok(res);
         }
         
-        //TODO: TÄPSELT SAMA
         /// <summary>
-        /// Returns all users that are participating in that contest without Trainers
+        /// Returns all users that are part of that contest and team
         /// </summary>
         /// <returns>List of users</returns>
         [HttpGet("users/{contestId:guid}/{teamId:guid}")]
@@ -132,9 +131,9 @@ namespace WebApp.ApiControllers
         [Consumes("application/json")]
         [ProducesResponseType<App.DTO.v1_0.UserContestPackage>((int)HttpStatusCode.OK)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<App.DTO.v1_0.UserContestPackage>>> GetContestUsersWithoutTeachers(Guid contestId, Guid teamId)
+        public async Task<ActionResult<List<App.DTO.v1_0.UserContestPackage>>> GetContestTeammates(Guid contestId, Guid teamId)
         {
-            var res = (await _bll.UserContestPackages.GetContestUsersWithoutTeachers(contestId, teamId)).Select(e => _mapper.Map(e)).ToList();
+            var res = (await _bll.UserContestPackages.GetContestTeammates(contestId, teamId)).Select(e => _mapper.Map(e)).ToList();
             return Ok(res);
         }
         

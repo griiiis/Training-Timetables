@@ -1,8 +1,8 @@
 // File: C:\Users\krism\Js\icd0006-23-24-s\next-app1\src\app\Contest\Create\page.tsx
-import * as entry from '../../../../../src/app/Contest/Create/page.js'
+import * as entry from '../../../../../src/app/Contest/Create/page.tsx'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../src/app/Contest/Create/page.js')
+type TEntry = typeof import('/Users/krism/Js/icd0006-23-24-s/next-app1/src/app/Contest/Create/page.js').default
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

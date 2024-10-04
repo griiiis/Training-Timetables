@@ -1,5 +1,5 @@
 "use client"
-import { IContest } from "@/domain/IContest";
+import { IDeleteContestDTO } from "@/domain/DTOs/Contests/IDeleteContestDTO";
 import ContestService from "@/services/ContestService";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 export default function Delete() {
     let {id} = useParams();
     const router = useRouter();
-    const [contest, setContest] = useState<IContest>();
+    const [contest, setContest] = useState<IDeleteContestDTO>();
     const [isLoading, setIsLoading] = useState(true);
 
     const getContestDetails = async () => {
-        const response = await ContestService.getContest(id.toString());
+        const response = await ContestService.getOwnerContest(id.toString());
         if (response.data) {
             setContest(response.data);
             setIsLoading(false);
@@ -81,13 +81,13 @@ export default function Delete() {
                                             Contest Type
                                         </dt>
                                         <dd className="col-sm-8">
-                                            {contest?.contestType.contestTypeName}
+                                            {contest?.contestTypeName}
                                         </dd>
                                         <dt className="col-sm-4">
                                             Location
                                         </dt>
                                         <dd className="col-sm-8">
-                                            {contest?.location.locationName}
+                                            {contest?.locationName}
                                         </dd>
                                     </div>
                                 </div>

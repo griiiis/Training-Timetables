@@ -1,9 +1,9 @@
 using System.Net;
-using App.BLL.DTO;
 using App.Contracts.BLL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Identity;
+using App.DTO.v1_0;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,7 +24,7 @@ namespace WebApp.ApiControllers
     {
         private readonly IAppBLL _bll;
         private readonly UserManager<AppUser> _userManager;
-        private readonly PublicDTOBllMapper<App.DTO.v1_0.Level, Level> _mapper;
+        private readonly PublicDTOBllMapper<Level, App.BLL.DTO.Level> _mapper;
         
         private Guid UserId => Guid.Parse(_userManager.GetUserId(User)!);
 
@@ -38,7 +38,7 @@ namespace WebApp.ApiControllers
         {
             _bll = bll;
             _userManager = userManager;
-            _mapper = new PublicDTOBllMapper<App.DTO.v1_0.Level, Level>(autoMapper);
+            _mapper = new PublicDTOBllMapper<Level, App.BLL.DTO.Level>(autoMapper);
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace WebApp.ApiControllers
         [HttpGet]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType<App.DTO.v1_0.Level>((int) HttpStatusCode.OK)]
+        [ProducesResponseType<Level>((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<List<App.DTO.v1_0.Level>>> GetLevels()
+        public async Task<ActionResult<List<Level>>> GetLevels()
         {
             var res = (await _bll.Levels.GetAllAsync(UserId)).Select(e => _mapper.Map(e)).ToList();
             return Ok(res);
@@ -62,43 +62,23 @@ namespace WebApp.ApiControllers
         /// </summary>
         /// <param name="contestId">Contest Id</param>
         /// <returns>List of levels</returns>
-        [HttpGet("{contestId:guid}")]
+        [HttpGet("contest/{contestId:guid}")]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType<App.DTO.v1_0.Time>((int) HttpStatusCode.OK)]
+        [ProducesResponseType<List<Level>>((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
-        public async Task<ActionResult<List<App.DTO.v1_0.Level>>> GetContestLevels(Guid contestId)
+        public async Task<ActionResult<List<Level>>> GetContestLevels(Guid contestId)
         {
             var res = (await _bll.Levels.GetAllCurrentContestAsync(contestId)).Select(e => _mapper.Map(e)).ToList();
             return Ok(res);
         }
-        
-        /// <summary>
-        /// Returns Level that matches given Id and belongs to User
-        /// </summary>
-        /// <param name="id">Level Id</param>
-        /// <returns>Level that matches given id and belongs to User</returns>
-        [HttpGet("level/{id:guid}")]
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        [ProducesResponseType<App.DTO.v1_0.Level>((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
-        public async Task<ActionResult<App.DTO.v1_0.Level>> GetLevelForAll(Guid id)
-        {
-            var level = _mapper.Map(await _bll.Levels.FirstOrDefaultAsync(id));
-            if (level == null)
-            {
-                return NotFound();
-            }
-            return Ok(level);
-        }
 
         /// <summary>
-        /// Returns Level that matches given Id and belongs to User
+        /// Returns Level that matches given Id
         /// </summary>
         /// <param name="id">Level Id</param>
-        /// <returns>Level that matches given id and belongs to User</returns>
-        [HttpGet("owner/{id:guid}")]
+        /// <returns>Level that matches given id</returns>
+        [HttpGet("{id:guid}")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [ProducesResponseType<App.DTO.v1_0.Level>((int) HttpStatusCode.OK)]
@@ -106,10 +86,6 @@ namespace WebApp.ApiControllers
         [Authorize(Roles = "Contest Admin")]
         public async Task<ActionResult<App.DTO.v1_0.Level>> GetLevel(Guid id)
         {
-            if (!_bll.Levels.IsLevelOwnedByUser(UserId, id))
-            {
-                return NotFound();
-            }
             var level = _mapper.Map(await _bll.Levels.FirstOrDefaultAsync(id));
             if (level == null)
             {

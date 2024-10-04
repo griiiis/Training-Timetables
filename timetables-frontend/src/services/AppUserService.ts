@@ -1,8 +1,7 @@
 import BaseService from "./BaseService";
 import { IResultObject } from "./IResultObject";
-import { IUserInfo } from "@/state/AppContext";
-import { IAppUserModel } from "@/domain/Models/IAppUserModel";
 import { IAppUser } from "@/domain/Identity/IAppUser";
+import { IAppUserModel } from "@/domain/DTOs/Users/IAppUserModel";
 
 
 export default class AppUserService extends BaseService {

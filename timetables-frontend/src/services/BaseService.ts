@@ -72,9 +72,8 @@ export default class BaseService {
                     headers: {
                         "Authorization": "Bearer " + userInfo.jwt
                     }
-            }).post<IUserInfo>(`Identity/Account/RefreshTokenData`, data)});
+            }).post<IUserInfo>(`identity/Account/RefreshTokenData`, data)});
             if (res.data){
-
                 if (res.data) {
                     userInfo.jwt = res.data.jwt;
                     userInfo.refreshToken = res.data.refreshToken;

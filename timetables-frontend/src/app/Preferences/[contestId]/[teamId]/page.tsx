@@ -1,5 +1,6 @@
 "use client"
 
+import { IInformationContestDTO } from "@/domain/DTOs/Contests/IInformationContestDTO";
 import { IContest } from "@/domain/IContest";
 import { ITimeOfDay } from "@/domain/ITimeOfDay";
 import { ITimeTeam } from "@/domain/ITimeTeam";
@@ -17,7 +18,7 @@ export default function Preferences() {
     let {teamId} = useParams();
     let {contestId} = useParams();
     const [teamTimes, setTeamTimes] = useState<ITimeTeam[]>([]);
-    const [contest, setContest] = useState<IContest>();
+    const [contest, setContest] = useState<IInformationContestDTO>();
     const [timeOfDays, setTimeOfDays] = useState<ITimeOfDay[]>([]);
     const [dates, setDates] = useState<Date[]>([]);
     

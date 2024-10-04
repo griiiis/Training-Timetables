@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using WebApp.Areas.ContestAdmin.ViewModels;
 using AppUser = App.BLL.DTO.Identity.AppUser;
 using JsonSerializer = System.Text.Json.JsonSerializer;
-using TimeOfDaysViewModel = App.DTO.v1_0.TimeOfDaysViewModel;
+using TimeOfDaysViewModel = App.DTO.v1_0.DTOs.TimeOfDaysViewModel;
 
 
 namespace App.Test.Integration.API.Participant;

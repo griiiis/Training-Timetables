@@ -121,7 +121,7 @@ namespace WebApp.Controllers
                     UserId = userId,
                     UserContestPackage = userContestPackage,
                     UserContestPackages = _bll.UserContestPackages
-                        .GetContestUsersWithoutTeachers(contest.Id, userContestPackage.TeamId).Result.ToList(),
+                        .GetContestTeammates(contest.Id, userContestPackage.TeamId).Result.ToList(),
                     GameTypes = (await _bll.GameTypes.GetAllCurrentContestAsync(contest.Id)).ToList(),
                     Level = _bll.Levels.FirstOrDefaultAsync(userContestPackage.LevelId).Result!,
                     GameType = _bll.GameTypes.FirstOrDefaultAsync(userContestPackage.PackageGameTypeTime!.GameTypeId)
@@ -146,7 +146,7 @@ namespace WebApp.Controllers
                     IfTrainer = _bll.ContestUserRoles.IfContestTrainer(userId, contest.Id),
                     UserContestPackage = userContestpackage,
                     UserContestPackages = _bll.UserContestPackages
-                        .GetContestUsersWithoutTeachers(contest.Id, userContestpackage!.TeamId).Result.ToList(),
+                        .GetContestTeammates(contest.Id, userContestpackage!.TeamId).Result.ToList(),
                     GameTypes = (await _bll.GameTypes.GetAllCurrentContestAsync(contest.Id)).ToList(),
                     Level = _bll.Levels.FirstOrDefaultAsync(userContestpackage.LevelId).Result!,
                     GameType = _bll.GameTypes.FirstOrDefaultAsync(userContestpackage.PackageGameTypeTime!.GameTypeId)

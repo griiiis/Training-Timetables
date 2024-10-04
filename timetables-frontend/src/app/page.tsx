@@ -1,4 +1,6 @@
 "use client";
+import StaticExample from "@/components/JoinContestModal";
+import JoinContestModal from "@/components/JoinContestModal";
 import ContestTable from "@/components/Search";
 import { IContest } from "@/domain/IContest";
 import { IUserContestPackage } from "@/domain/IUserContestPackage";
@@ -27,8 +29,6 @@ export default function Contest() {
   const loadData = async () => {
     const contestResponse = await ContestService.getAll();
     const allUserPackages = await UserContestPackageService.getAll();
-
-    console.log(contestResponse.data)
 
     if (localStorage.getItem("userInfo") !== null) {
       const userContestPackagesResponse =
@@ -251,12 +251,7 @@ export default function Contest() {
                                     Join The Contest!
                                   </Link>
                                 ) : (
-                                  <Link
-                                    className="btn btn-success"
-                                    href={`/UserContestPackage/Create/${contest.id}`}
-                                  >
-                                    Join The Contest!
-                                  </Link>
+                                  <JoinContestModal contestId={contest.id}/>
                                 )}
                               </div>
                             )}

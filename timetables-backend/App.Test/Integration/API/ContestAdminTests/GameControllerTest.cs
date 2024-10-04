@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using App.DTO.v1_0.DTOs;
 using App.DTO.v1_0.Identity;
 using Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -74,23 +75,23 @@ public class GameControllerTest : IClassFixture<CustomWebApplicationFactory<Prog
         Assert.NotNull(loginData.Jwt);
         Assert.True(loginData.Jwt.Length > 0);
         
-        var day1 = new App.DTO.v1_0.TimeOfDaysViewModel
+        var day1 = new TimeOfDaysViewModel
         {
             Date = new DateOnly(2024, 05, 17),
             SelectedTimesList = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()]
         };
-        var day2 = new App.DTO.v1_0.TimeOfDaysViewModel
+        var day2 = new TimeOfDaysViewModel
         {
             Date = new DateOnly(2024, 05, 18),
             SelectedTimesList = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()]
         };
-        var day3 = new App.DTO.v1_0.TimeOfDaysViewModel
+        var day3 = new TimeOfDaysViewModel
         {
             Date = new DateOnly(2024, 05, 19),
             SelectedTimesList = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()]
         };
         
-        var Games = new App.DTO.v1_0.CreateGamesData
+        var Games = new CreateGamesData
         {
             SelectedLevelIds = [[Guid.NewGuid(),Guid.NewGuid()],[Guid.NewGuid()]],
             SelectedCourtIds =  [[Guid.NewGuid(),Guid.NewGuid()],[Guid.NewGuid(), Guid.NewGuid()]],

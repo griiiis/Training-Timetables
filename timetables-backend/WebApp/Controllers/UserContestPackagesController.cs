@@ -112,7 +112,7 @@ namespace WebApp.Controllers
         // GET: UserContestPackages/Invite
         public async Task<IActionResult> Invite(Guid contestId, Guid teamId)
         {
-            var users = _bll.UserContestPackages.GetContestUsersWithoutTeachers(contestId, teamId).Result
+            var users = _bll.UserContestPackages.GetContestTeammates(contestId, teamId).Result
                 .Select(e => e.AppUserId).ToList();
             
             var vm = new UserTeamCreateViewModel()

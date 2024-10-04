@@ -1,10 +1,10 @@
 "use client"
+import { IEditContestDTO } from "@/domain/DTOs/Contests/IEditContestDTO";
 import { IContestType } from "@/domain/IContestType";
 import { ILevel } from "@/domain/ILevel"
 import { ILocation } from "@/domain/ILocation";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
 import { ITime } from "@/domain/ITime";
-import { IContestEditModel } from "@/domain/Models/Contests/IContestEditModel";
 import ContestService from "@/services/ContestService";
 import ContestTypeService from "@/services/ContestTypeService";
 import LevelService from "@/services/LevelService";
@@ -50,13 +50,13 @@ export default function Edit() {
 
         if (responseContest.data && responseLevels.data && responseTimes.data && responsePackages.data && responseLocations.data && responseContestTypes.data) {
             // Previous data about the contest
-            setContestName(responseContest.data.contest.contestName);
-            setDescription(responseContest.data.contest.description)
-            setFrom(responseContest.data.contest.from.toString())
-            setUntil(responseContest.data.contest.until.toString())
-            setTotalHours(responseContest.data.contest.totalHours.toString())
-            setLocationId(responseContest.data.contest.locationId)
-            setContestTypeId(responseContest.data.contest.contestTypeId)
+            setContestName(responseContest.data.contestName);
+            setDescription(responseContest.data.description)
+            setFrom(responseContest.data.from.toString())
+            setUntil(responseContest.data.until.toString())
+            setTotalHours(responseContest.data.totalHours.toString())
+            setLocationId(responseContest.data.locationId)
+            setContestTypeId(responseContest.data.contestTypeId)
 
             setPreviousLevelIds(responseContest.data.levelIds);
             setPreviousPackagesIds(responseContest.data.packagesIds);
@@ -74,25 +74,23 @@ export default function Edit() {
     };
 
     const editContest = async () => {
-        const contestEditModel : IContestEditModel = {
-            contest: {
-                contestName: contestName,
-                id: id.toString(),
-                description: description,
-                from: from,
-                until: until,
-                totalHours: Number.parseInt(totalHours),
-                contestTypeId: contestTypeId,
-                locationId: locationId,
-            },
+        const editContestDTO : IEditContestDTO = {
+            id: id.toString(),
+            contestName: contestName,
+            description: description,
+            from: from,
+            until: until,
+            totalHours: Number.parseInt(totalHours),
+            contestTypeId: contestTypeId,
+            locationId: locationId,
             levelIds: previousLevelIds,
             timesIds: previousTimesIds,
             packagesIds: previousPackagesIds,
         
         }
-        console.log(contestEditModel)
+        console.log(editContestDTO)
 
-        const response = await ContestService.putContest(id.toString(), contestEditModel);
+        const response = await ContestService.putContest(editContestDTO);
         if (response.data){
             router.push("/ContestAdmin/Contest");
         

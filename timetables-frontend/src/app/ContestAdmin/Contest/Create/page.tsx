@@ -4,7 +4,7 @@ import { ILevel } from "@/domain/ILevel";
 import { ILocation } from "@/domain/ILocation";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
 import { ITime } from "@/domain/ITime";
-import { IContestCreateModel } from "@/domain/Models/Contests/IContestCreateModel";
+import { ICreateContestDTO } from "@/domain/DTOs/Contests/ICreateContestDTO";
 import ContestService from "@/services/ContestService";
 import ContestTypeService from "@/services/ContestTypeService";
 import GameTypeService from "@/services/GameTypeService";
@@ -38,8 +38,7 @@ export default function Create() {
     const [isLoading, setIsLoading] = useState(true);
 
     const CreateNewContest = async () => {
-        const createContestData : IContestCreateModel = {
-            contest: {
+        const createContestData : ICreateContestDTO = {
             contestName: contestName,
             description: description,
             from: from,
@@ -47,7 +46,6 @@ export default function Create() {
             totalHours: totalHours,
             contestTypeId: contestTypeId,
             locationId: locationId,
-            },
             selectedLevelIds: levelIds,
             selectedTimesIds: timesIds,
             selectedPackagesIds: packagesIds,

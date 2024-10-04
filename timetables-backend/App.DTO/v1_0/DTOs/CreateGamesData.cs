@@ -1,4 +1,4 @@
-﻿namespace App.DTO.v1_0;
+﻿namespace App.DTO.v1_0.DTOs;
 
 public class CreateGamesData
 {

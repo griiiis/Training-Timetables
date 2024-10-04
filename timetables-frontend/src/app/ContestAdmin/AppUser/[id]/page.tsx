@@ -49,7 +49,7 @@ export default function Index() {
                             <td>{item.appUser.email}</td>
                             <td></td>
                             <td>
-                                <Link href={`/ContestAdmin/AppUser/Edit/${item.appUserId}`}>Edit</Link>
+                                <Link href={`/ContestAdmin/AppUser/Edit/${item.appUser.email}`}>Edit</Link>
                             </td>
                         </tr>
                     ))}

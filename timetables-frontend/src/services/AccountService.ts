@@ -1,6 +1,6 @@
 import BaseService from "./BaseService";
 import { IResultObject } from "./IResultObject";
-import { IUserInfo } from "@/state/AppContext";
+import { IUserInfo } from "@/domain/Identity/IUserInfo";
 import { ILogOutInfo } from "@/domain/Identity/ILogOutInfo";
 
 export default class AccountService extends BaseService {
@@ -11,18 +11,18 @@ export default class AccountService extends BaseService {
     static async login(data: object): Promise<IResultObject<IUserInfo>> {
 
         return this.tryAndCatch<IUserInfo>(async () => {
-            return (await this.httpClient()).post<IUserInfo>(`Identity/Account/Login`, data);
+            return (await this.httpClient()).post<IUserInfo>(`identity/Account/Login`, data);
     })}
 
     static async register(data: object): Promise<IResultObject<IUserInfo>> {
         return this.tryAndCatch<IUserInfo>(async () => {
-            return (await this.httpClient()).post<IUserInfo>(`Identity/Account/Register`, data);
+            return (await this.httpClient()).post<IUserInfo>(`identity/Account/Register`, data);
     })}
 
     static async logout(data: ILogOutInfo) : Promise<IResultObject<IUserInfo>> {
         if(!data.refreshToken) return {};
 
         return this.tryAndCatch<IUserInfo>(async () => {
-            return (await this.httpClient()).post<IUserInfo>("Identity/Account/Logout", data)
+            return (await this.httpClient()).post<IUserInfo>("identity/Account/Logout", data)
     })}
 }

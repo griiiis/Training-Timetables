@@ -4,6 +4,7 @@ using App.Contracts.BLL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Identity;
+using App.DTO.v1_0.DTOs;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +26,8 @@ namespace WebApp.ApiControllers
         private readonly IAppBLL _bll;
         private readonly UserManager<AppUser> _userManager;
         private readonly PublicDTOBllMapper<App.DTO.v1_0.RolePreference, RolePreference> _mapper;
+        
+        private Guid UserId => Guid.Parse(_userManager.GetUserId(User)!);
 
         public RolePreferencesController(IAppBLL bll, UserManager<AppUser> userManager, IMapper autoMapper)
         {
@@ -44,7 +47,7 @@ namespace WebApp.ApiControllers
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         public async Task<ActionResult<List<App.DTO.v1_0.RolePreference>>> GetRolePreferences()
         {
-            var res = (await _bll.RolePreferences.GetAllAsync(Guid.Parse(_userManager.GetUserId(User)!))).Select(e => _mapper.Map(e)).ToList();
+            var res = (await _bll.RolePreferences.GetAllAsync(UserId)).Select(e => _mapper.Map(e)).ToList();
             return Ok(res);
         }
         
@@ -57,10 +60,10 @@ namespace WebApp.ApiControllers
         [Consumes("application/json")]
         [ProducesResponseType<App.DTO.v1_0.RolePreference>((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
-        public async Task<ActionResult<List<App.DTO.v1_0.RolePreferenceViewModel>>> AddRolePreferences(App.DTO.v1_0.RolePreferenceViewModel vm)
+        public async Task<ActionResult<List<RolePreferenceViewModel>>> AddRolePreferences(RolePreferenceViewModel vm)
         {
             //Remove previous rolepreferences
-            var rolePreferences = (await _bll.RolePreferences.GetAllAsync(Guid.Parse(_userManager.GetUserId(User)!))).ToList();
+            var rolePreferences = (await _bll.RolePreferences.GetAllAsync(UserId)).ToList();
             foreach (var role in rolePreferences)
             {
                 await _bll.RolePreferences.RemoveAsync(role);
@@ -86,7 +89,7 @@ namespace WebApp.ApiControllers
                         GameTypeId = gameTypes[i].Id,
                         ContestId = Guid.Parse(vm.ContestId)
                     };
-                    _bll.RolePreferences.AddRolePreferenceWithUser(Guid.Parse(_userManager.GetUserId(User)!), rolePreference);
+                    _bll.RolePreferences.AddRolePreferenceWithUser(UserId, rolePreference);
                 }
             }
             await _bll.SaveChangesAsync(); 

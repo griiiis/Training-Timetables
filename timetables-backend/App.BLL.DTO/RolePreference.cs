@@ -9,6 +9,7 @@ public class RolePreference : IDomainEntityId
     public Guid LevelId { get; set; }
     public Level? Level { get; set; }
     public Guid GameTypeId { get; set; }
+    public GameType? GameType { get; set; }
     public Guid ContestId { get; set; }
     public int GamesTrainedHourly { get; set; }
 }

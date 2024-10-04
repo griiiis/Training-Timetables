@@ -1,4 +1,4 @@
-﻿using App.BLL.DTO.Models.Contests;
+﻿using App.BLL.DTO.DTOs.Contests;
 using AutoMapper;
 
 namespace WebApp.Helpers;
@@ -29,9 +29,9 @@ public class AutoMapperProfile : Profile
         CreateMap<App.DTO.v1_0.ContestPackage, App.BLL.DTO.ContestPackage>().ReverseMap();
         CreateMap<App.DTO.v1_0.ContestRole, App.BLL.DTO.ContestRole>().ReverseMap();
         CreateMap<App.DTO.v1_0.ContestUserRole, App.BLL.DTO.ContestUserRole>().ReverseMap();
-        CreateMap<App.DTO.v1_0.Models.Contests.ContestEditModel, ContestEditModel>().ReverseMap();
-        CreateMap<App.DTO.v1_0.Models.Contests.ContestCreateModel, ContestCreateModel>().ReverseMap();
-        
+        CreateMap<App.DTO.v1_0.DTOs.Contests.EditContestDTO, EditContestDTO>().ReverseMap();
+        CreateMap<App.DTO.v1_0.DTOs.Contests.CreateContestDTO, CreateContestDTO>().ReverseMap();
+        CreateMap<App.DTO.v1_0.DTOs.Contests.OwnerContestsDTO, OwnerContestsDTO>().ReverseMap();
     }
     
     

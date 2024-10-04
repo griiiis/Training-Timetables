@@ -1,7 +1,7 @@
 "use client"
 import { IAppRole } from "@/domain/Identity/IAppRole";
 import { IAppUser } from "@/domain/Identity/IAppUser";
-import { IAppUserModel } from "@/domain/Models/IAppUserModel";
+import { IAppUserModel } from "@/domain/DTOs/Users/IAppUserModel";
 import AppUserService from "@/services/AppUserService";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -60,7 +60,7 @@ return (
                         <label className="control-label">Last Name</label>
                         <input readOnly value={user!.lastName} className="form-control" />
                     </div>
-                    <input type="hidden" value={user!.id} />
+                    <input type="hidden" value={user!.email} />
                     <div className="form-group">
                         <label className="control-label">Username</label>
                         <input readOnly value={user!.firstName} className="form-control" />

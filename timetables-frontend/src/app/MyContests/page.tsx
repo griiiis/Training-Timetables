@@ -1,132 +1,22 @@
 "use client"
-import { IContest } from "@/domain/IContest";
-import { IGameType } from "@/domain/IGameType";
-import { ILevel } from "@/domain/ILevel";
-import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
-import { IRolePreference } from "@/domain/IRolePreference";
-import { IUserContestPackage } from "@/domain/IUserContestPackage";
 import ContestService from "@/services/ContestService";
-import GameService from "@/services/GameService";
-import GameTypeService from "@/services/GameTypeService";
-import LevelService from "@/services/LevelService";
-import PackageGameTypeTimeService from "@/services/PackageGameTypeTimeService";
-import RolePreferenceService from "@/services/RolePreferenceService";
-import UserContestPackageService from "@/services/UserContestPackageService";
-import { IUserInfo } from "@/state/AppContext";
+import { IMyContestsDTO } from "@/domain/DTOs/Contests/IMyContestsDTO";
 import Link from "next/link";
 import React from "react";
 import { useEffect, useState } from "react";
 
 
 export default function Index() {
-
-    interface MyContestsModel {
-        ComingContests: Array<ContestModel | null>,
-        CurrentContests: Array<ContestModel | null>,
-        IfTeacher: boolean,
-        RolePreferences: Array<IRolePreference[]>
-    }
-
-    interface ContestModel {
-        Contest: IContest,
-        AnyGames: boolean,
-        UserContestPackage: IUserContestPackage,
-        UserContestPackages: Array<IUserContestPackage>,
-        GameTypes: Array<IGameType>,
-        Level: ILevel,
-        GameType: IGameType,
-        PackageGameTypeTime: IPackageGameTypeTime
-    }
-
-    const [myContests, setMyContests] = useState<MyContestsModel>()
+    const [myContests, setMyContests] = useState<IMyContestsDTO>()
     const [isLoading, setIsLoading] = useState(true);
 
     const loadData = async () => {
-
-        const userInfo : IUserInfo = JSON.parse(localStorage.getItem("userInfo")!)
-
         const allContestsResponse = await ContestService.getUserContests();
-        const ifTeacher = (userInfo?.role === "Treener");
-        const RolePreferences = Array<IRolePreference[]>([]);
-        if (ifTeacher) {
-            const rolePreferences = await RolePreferenceService.getAll();
-            if (rolePreferences.data) {
-                RolePreferences.push(rolePreferences.data);
-            }
-        }
-
         if (allContestsResponse.data) {
-
-            // Current contests
-            const currentContests: Array<ContestModel | null> = await Promise.all(allContestsResponse.data!
-                .filter(contest => new Date(contest.from) < new Date() && new Date(contest.until) > new Date())
-                .map(async contest => {
-                    const userContestPackage = (await UserContestPackageService.getUserContestPackage(contest.id));
-                    if (userContestPackage.data) {
-                        const GetContest = await ContestService.getContestInformation(contest.id);
-                        const AnyGames = await GameService.anyContestGames(contest.id)!;
-                        const UserContestPackage = userContestPackage.data;
-                        const UserContestPackages = await UserContestPackageService.getContestTeammates(contest.id, UserContestPackage.teamId);
-                        const GameTypes = await GameTypeService.getCurrentContestGameTypes(contest.id);
-                        const Level = await LevelService.getLevelForAll(UserContestPackage.levelId);
-                        const GameType = await GameTypeService.getGameTypeForAll(UserContestPackage.packageGameTypeTime!.gameType.id);
-                        const PackageGameTypeTime = await PackageGameTypeTimeService.getPackageGameTypeTimeForAll(UserContestPackage.packageGameTypeTime!.id);
-                        if (GetContest.data && AnyGames.data && UserContestPackages.data && GameTypes.data && Level.data && GameType.data && PackageGameTypeTime.data) {
-                            return {
-                                Contest: GetContest.data,
-                                AnyGames: AnyGames.data,
-                                UserContestPackage: userContestPackage.data,
-                                UserContestPackages: UserContestPackages.data,
-                                GameTypes: GameTypes.data,
-                                Level: Level.data,
-                                GameType: GameType.data,
-                                PackageGameTypeTime: PackageGameTypeTime.data
-                            };
-                        }
-                    }
-                    return null;
-                }));
-
-
-            // Coming contests
-            const comingContests: Array<ContestModel | null> = await Promise.all(allContestsResponse.data!
-                .filter(contest => new Date(contest.from) > new Date())
-                .map(async contest => {
-                    const userContestPackage = await UserContestPackageService.getUserContestPackage(contest.id);
-                    if (userContestPackage.data) {
-                        const GetContest = await ContestService.getContestInformation(contest.id);
-                        const AnyGames = await GameService.anyContestGames(contest.id);
-                        const UserContestPackage = userContestPackage.data;
-                        const UserContestPackages = await UserContestPackageService.getContestTeammates(contest.id, UserContestPackage.teamId);
-                        const GameTypes = await GameTypeService.getCurrentContestGameTypes(contest.id);
-                        const Level = await LevelService.getLevelForAll(UserContestPackage.levelId);
-                        const GameType = await GameTypeService.getGameTypeForAll(UserContestPackage.packageGameTypeTime!.gameType.id);
-                        const PackageGameTypeTime = await PackageGameTypeTimeService.getPackageGameTypeTimeForAll(UserContestPackage.packageGameTypeTime!.id);
-                        if (GetContest.data && UserContestPackages.data && GameTypes.data && Level.data && GameType.data && PackageGameTypeTime.data) {
-                            return {
-                                Contest: GetContest.data,
-                                AnyGames: AnyGames.data!,
-                                UserContestPackage: userContestPackage.data,
-                                UserContestPackages: UserContestPackages.data,
-                                GameTypes: GameTypes.data,
-                                Level: Level.data,
-                                GameType: GameType.data,
-                                PackageGameTypeTime: PackageGameTypeTime.data
-                            };
-                        }
-                    }
-                    return null;
-                }));
-            setMyContests({
-                ComingContests: comingContests,
-                CurrentContests: currentContests,
-                IfTeacher: ifTeacher,
-                RolePreferences: RolePreferences
-            });
+            setMyContests(allContestsResponse.data);
             setIsLoading(false)
         }
     }
-
 
     useEffect(() => { loadData() }, []);
 
@@ -137,37 +27,38 @@ export default function Index() {
             <h1 className="middle">Contests</h1>
             <br />
 
-            {myContests!.CurrentContests.length > 0 && myContests!.CurrentContests[0] !== null  && (
+            {myContests!.currentContestsDTO.length > 0 && myContests!.currentContestsDTO[0] !== null  && (
                 <div className="ended-contests">
                     <h2 className="section-title">Current Contests</h2>
                     <div className="row">
-                        {myContests!.CurrentContests.map(contest => {
+                        {myContests!.currentContestsDTO.map(contestDTO => {
                             return (
-                                <React.Fragment key={`${contest!.Contest.id}`}>
+                                <React.Fragment key={`${contestDTO!.contestId}`}>
                                     <div className="col-md-6 mb-4">
                                         <div className="card ended-contest-card">
                                             <div className="card-body">
                                                 <div className="row">
                                                     <div className="col-md-6">
-                                                        {myContests!.IfTeacher ? (<h2 className="contest-name">{contest!.Contest.contestName} - Trainer</h2>)
+                                                        {contestDTO.ifTrainer ? (<h2 className="contest-name">{contestDTO!.contestName} - Trainer</h2>)
                                                             : (
-                                                                <h2 className="contest-name">{contest!.Contest.contestName}</h2>
+                                                                <h2 className="contest-name">{contestDTO!.contestName}</h2>
                                                             )}
-                                                        <p className="contest-duration">{new Date(contest!.Contest.from).toDateString() + ' ' + new Date(contest!.Contest.from).toTimeString().substring(0, 8) + ' -'} <br></br>
-                                                            {new Date(contest!.Contest.until).toDateString() + ' ' + new Date(contest!.Contest.until).toTimeString().substring(0, 8)}</p>
-                                                        {myContests!.IfTeacher ? (
+                                                        <p className="contest-duration">{new Date(contestDTO!.from).toDateString() + ' ' + new Date(contestDTO!.from).toTimeString().substring(0, 8) + ' -'} <br></br>
+                                                            {new Date(contestDTO!.until).toDateString() + ' ' + new Date(contestDTO!.until).toTimeString().substring(0, 8)}</p>
+                                                        {contestDTO.ifTrainer ? (
                                                             <>
-                                                                {myContests!.IfTeacher && (
+                                                                {contestDTO.ifTrainer && (
                                                                     <div>
-                                                                        {contest!.GameTypes.map(gameType => {
-                                                                            const selectedTitles = myContests!.RolePreferences
-                                                                                .flatMap(preferences => preferences
-                                                                                    .filter(pref => pref.contestId === contest!.Contest.id && pref.gameTypeId === gameType.id))
-                                                                                .sort((a, b) => a!.level.title.localeCompare(b.level!.title))
-                                                                                .map(pref => pref.level!.title);
+                                                                        {contestDTO!.gameTypesDTOs.map(gameTypeDTO => {
+
+                                                                            const selectedTitles = contestDTO!.rolePreferencesDTOs
+                                                                                .filter(rolePreference => rolePreference.gameTypeId === gameTypeDTO.gameTypeId)
+                                                                                .sort((a, b) => a!.levelTitle.localeCompare(b.levelTitle))
+                                                                                .map(pref => pref.levelTitle);
+
                                                                             return (
-                                                                                <div key={gameType.id} className="contest-detail">
-                                                                                    <strong>{gameType.gameTypeName}:</strong>
+                                                                                <div key={gameTypeDTO.gameTypeId} className="contest-detail">
+                                                                                    <strong>{gameTypeDTO.gameTypeName}:</strong>
                                                                                     <p>{selectedTitles.length ? selectedTitles.join(", ") : "None"}</p>
                                                                                 </div>
                                                                             );
@@ -178,31 +69,31 @@ export default function Index() {
                                                         ) : (
                                                             <>
                                                                 <p className="contest-detail">
-                                                                    <strong>Level:</strong> {contest!.Level.title}
+                                                                    <strong>Level:</strong> {contestDTO!.levelTitle}
                                                                 </p>
                                                                 <p className="contest-detail">
-                                                                    <strong>Game Type:</strong> {contest!.PackageGameTypeTime.gameType.gameTypeName}
+                                                                    <strong>Game Type:</strong> {contestDTO!.gameTypeName}
                                                                 </p>
                                                                 <p className="contest-detail">
-                                                                    <strong>Package:</strong> {contest!.PackageGameTypeTime.packageGtName}
+                                                                    <strong>Package:</strong> {contestDTO!.packageName}
                                                                 </p>
                                                             </>
                                                         )}
-                                                        {contest!.AnyGames && (
+                                                        {contestDTO!.anyGames && (
                                                             <div className="contest-actions">
-                                                                <Link className="btn btn-primary" href={`/Games/${contest!.Contest.id}`}>Games</Link>
+                                                                <Link className="btn btn-primary" href={`/Games/${contestDTO!.contestId}`}>Games</Link>
                                                             </div>
                                                         )}
 
                                                     </div>
-                                                    {!myContests!.IfTeacher ? (
+                                                    {!contestDTO!.ifTrainer ? (
                                                         <div className="col-md-6">
 
                                                             <h4>Teammates</h4>
                                                             <ul className="team-members">
-                                                                {contest!.UserContestPackages.map(userPackage => (
-                                                                    <li key={userPackage.id}>
-                                                                        {userPackage.appUser.firstName} {userPackage.appUser.lastName}
+                                                                {contestDTO!.packagesDTOs.map(userPackage => (
+                                                                    <li key={userPackage.packageId}>
+                                                                        {userPackage.firstName} {userPackage.lastName}
                                                                     </li>
                                                                 ))}
                                                             </ul>
@@ -222,39 +113,40 @@ export default function Index() {
                     </div>
                 </div>
             )}
-            {myContests!.ComingContests.length > 0 && myContests!.ComingContests[0] !== null && (
+            {myContests!.comingContestsDTO.length > 0 && myContests!.comingContestsDTO[0] !== null && (
                 <div className="ended-contests">
-                    <h2 className="section-title">Comings Contests</h2>
+                    <h2 className="section-title">Coming Contests</h2>
                     <div className="row">
-                        {myContests!.ComingContests.map(contest => {
+                        {myContests!.comingContestsDTO.map(contestDTO => {
                             return (
-                                <React.Fragment key={`${contest!.Contest.id}`}>
+                                <React.Fragment key={`${contestDTO!.contestId}`}>
                                     <div className="col-md-6 mb-4">
                                         <div className="card ended-contest-card">
                                             <div className="card-body">
                                                 <div className="row">
                                                     <div className="col-md-6">
-                                                        {myContests!.IfTeacher ? (<h2 className="contest-name">{contest!.Contest.contestName} - Trainer</h2>)
+                                                        {contestDTO.ifTrainer ? (<h2 className="contest-name">{contestDTO!.contestName} - Trainer</h2>)
                                                             : (
-                                                                <h2 className="contest-name">{contest!.Contest.contestName}</h2>
+                                                                <h2 className="contest-name">{contestDTO!.contestName}</h2>
                                                             )}
-                                                        <p className="contest-duration">{new Date(contest!.Contest.from).toDateString() + ' ' + new Date(contest!.Contest.from).toTimeString().substring(0, 8) + ' -'} <br></br>
-                                                            {new Date(contest!.Contest.until).toDateString() + ' ' + new Date(contest!.Contest.until).toTimeString().substring(0, 8)}</p>
+                                                        <p className="contest-duration">{new Date(contestDTO.from).toDateString() + ' ' + new Date(contestDTO.from).toTimeString().substring(0, 8) + ' -'} <br></br>
+                                                            {new Date(contestDTO.until).toDateString() + ' ' + new Date(contestDTO.until).toTimeString().substring(0, 8)}</p>
 
-                                                        {myContests!.IfTeacher ? (
+                                                        {contestDTO.ifTrainer ? (
                                                             <div className="contest-actions">
                                                                 <>
-                                                                    {myContests!.IfTeacher && (
+                                                                    {contestDTO.ifTrainer && (
                                                                         <div>
-                                                                            {contest!.GameTypes.map(gameType => {
-                                                                                const selectedTitles = myContests!.RolePreferences
-                                                                                    .flatMap(preferences => preferences
-                                                                                        .filter(pref => pref.contestId === contest!.Contest.id && pref.gameTypeId === gameType.id))
-                                                                                    .sort((a, b) => a!.level.title.localeCompare(b.level!.title))
-                                                                                    .map(pref => pref.level!.title);
+                                                                            {contestDTO!.gameTypesDTOs.map(gameTypeDTO => {
+
+                                                                                const selectedTitles = contestDTO!.rolePreferencesDTOs
+                                                                                .filter(rolePreference => rolePreference.gameTypeId === gameTypeDTO.gameTypeId)
+                                                                                .sort((a, b) => a!.levelTitle.localeCompare(b.levelTitle))
+                                                                                .map(pref => pref.levelTitle);
+
                                                                                 return (
-                                                                                    <div key={gameType.id} className="contest-detail">
-                                                                                        <strong>{gameType.gameTypeName}:</strong>
+                                                                                    <div key={gameTypeDTO.gameTypeId} className="contest-detail">
+                                                                                        <strong>{gameTypeDTO.gameTypeName}:</strong>
                                                                                         <p>{selectedTitles.length ? selectedTitles.join(", ") : "None"}</p>
                                                                                     </div>
                                                                                 );
@@ -262,40 +154,40 @@ export default function Index() {
                                                                         </div>
                                                                     )}
                                                                     <div className="contest-actions">
-                                                                        {contest!.AnyGames && (
-                                                                            <Link className="btn btn-primary" href={`/Games/${contest!.Contest.id}`}>Games</Link>
+                                                                        {contestDTO.anyGames && (
+                                                                            <Link className="btn btn-primary" href={`/Games/${contestDTO.contestId}`}>Games</Link>
                                                                         )}
-                                                                        <Link className="btn btn-primary" href={`/RolePreference/${contest!.Contest.id}`}>Trainer Prefrerences</Link>
+                                                                        <Link className="btn btn-primary" href={`/RolePreference/${contestDTO.contestId}`}>Trainer Prefrerences</Link>
                                                                     </div>
                                                                 </>
                                                             </div>) : (
                                                             <>
                                                                 <p className="contest-detail">
-                                                                    <strong>Level:</strong> {contest!.Level.title}
+                                                                    <strong>Level:</strong> {contestDTO.levelTitle}
                                                                 </p>
                                                                 <p className="contest-detail">
-                                                                    <strong>Game Type:</strong> {contest!.PackageGameTypeTime.gameType.gameTypeName}
+                                                                    <strong>Game Type:</strong> {contestDTO!.gameTypeName}
                                                                 </p>
                                                                 <p className="contest-detail">
-                                                                    <strong>Package:</strong> {contest!.PackageGameTypeTime.packageGtName}
+                                                                    <strong>Package:</strong> {contestDTO!.packageName}
                                                                 </p>
                                                                 <div className="contest-actions">
-                                                                    {contest!.AnyGames && (
-                                                                        <Link className="btn btn-primary" href={`/Games/${contest!.Contest.id}`}>Games</Link>
+                                                                    {contestDTO.anyGames && (
+                                                                        <Link className="btn btn-primary" href={`/Games/${contestDTO.contestId}`}>Games</Link>
                                                                     )}
-                                                                    <Link className="btn btn-success" href={`/UserContestPackage/${contest!.Contest.id}/${contest?.UserContestPackage.teamId}`}>Add Teammates</Link>
-                                                                    <Link className="btn btn-info" href={`/Preferences/${contest!.Contest.id}/${contest?.UserContestPackage.teamId}`}>Preferences</Link>
+                                                                    <Link className="btn btn-success" href={`/UserContestPackage/${contestDTO.contestId}/${contestDTO?.teamId}`}>Add Teammates</Link>
+                                                                    <Link className="btn btn-info" href={`/Preferences/${contestDTO!.contestId}/${contestDTO?.teamId}`}>Preferences</Link>
                                                                 </div>
                                                             </>
                                                         )}
                                                     </div>
-                                                    {!myContests!.IfTeacher ? (
+                                                    {!contestDTO.ifTrainer ? (
                                                         <div className="col-md-6">
 
                                                             <h4>Teammates</h4>
-                                                            {contest!.UserContestPackages.map(userPackage => (
-                                                                <li key={userPackage.id}>
-                                                                    {userPackage.appUser.firstName} {userPackage.appUser.lastName}
+                                                            {contestDTO!.packagesDTOs.map(userPackage => (
+                                                                <li key={userPackage.packageId}>
+                                                                    {userPackage.firstName} {userPackage.lastName}
                                                                 </li>
                                                             ))}
                                                         </div>

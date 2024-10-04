@@ -1,11 +1,12 @@
 ﻿using App.BLL.DTO;
+using App.BLL.DTO.DTOs.Contests;
 using App.BLL.DTO.Models;
-using App.BLL.DTO.Models.Contests;
 using App.Contracts.BLL.Services;
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories;
 using AutoMapper;
 using Base.BLL;
+using ContestRole = App.DAL.DTO.ContestRole;
 
 namespace App.BLL.Services;
 
@@ -41,7 +42,7 @@ public class ContestService :
         return (await Repository.GetUserContests(userId)).Select(de => Mapper.Map(de));
     }
 
-    public async Task<ContestEditModel> GetContestEditModel(Guid userId, Guid contestId)
+    public async Task<EditContestDTO> GetContestEditModel(Guid userId, Guid contestId)
     {
         var contestInfo = await FirstOrDefaultAsync(contestId, userId);
         
@@ -54,9 +55,16 @@ public class ContestService :
         var previousTimes = contestInfo.ContestTimes
             .Select(e => e.Time!.Id).ToList();
 
-        var vm = new ContestEditModel()
+        var vm = new EditContestDTO
         {
-            Contest = contestInfo,
+            Id = contestInfo.Id,
+            ContestName = contestInfo.ContestName,
+            Description = contestInfo.Description,
+            TotalHours = contestInfo.TotalHours,
+            From = contestInfo.From,
+            Until = contestInfo.Until,
+            LocationId = contestInfo.LocationId,
+            ContestTypeId = contestInfo.ContestTypeId,
             LevelIds = previousLevels,
             PackagesIds = previousPackages!,
             TimesIds = previousTimes!,
@@ -64,7 +72,7 @@ public class ContestService :
         return vm;
     }
 
-    public async Task PutContest(Guid userId, Guid id, ContestEditModel contest)
+    public async Task PutContest(Guid userId, Guid id, EditContestDTO contestDTO)
     {
         //Remove previous packages
         var previousPackages = Uow.ContestPackages.GetAllAsync().Result.Where(e => e.ContestId.Equals(id));
@@ -98,7 +106,7 @@ public class ContestService :
         var gameTypes = new HashSet<Guid>();
         var allPackages = (await Uow.PackageGameTypeTimes.GetAllAsync(default)).ToList();
 
-        foreach (var packageId in contest.PackagesIds!)
+        foreach (var packageId in contestDTO.PackagesIds!)
         {
             var gameTypeId = allPackages
                 .FirstOrDefault(e => e.Id.Equals(packageId) && !gameTypes.Contains(e.GameTypeId))
@@ -114,58 +122,69 @@ public class ContestService :
         {
             var contestGameType = new App.DAL.DTO.ContestGameType()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestDTO.Id,
                 GameTypeId = gameTypeId
             };
             Uow.ContestGameTypes.Add(contestGameType);
         }
 
-        foreach (var packageId in contest.PackagesIds!)
+        foreach (var packageId in contestDTO.PackagesIds!)
         {
             var package = new App.DAL.DTO.ContestPackage()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestDTO.Id,
                 PackageGameTypeTimeId = packageId
             };
             Uow.ContestPackages.Add(package);
         }
 
-        foreach (var timeId in contest.TimesIds!)
+        foreach (var timeId in contestDTO.TimesIds!)
         {
             var times = new App.DAL.DTO.ContestTime()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestDTO.Id,
                 TimeId = timeId
             };
             Uow.ContestTimes.Add(times);
         }
 
-        foreach (var levelId in contest.LevelIds!)
+        foreach (var levelId in contestDTO.LevelIds!)
         {
             var contestLevel = new App.DAL.DTO.ContestLevel()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestDTO.Id,
                 LevelId = levelId
             };
             Uow.ContestLevels.Add(contestLevel);
         }
 
+        var contest = new Contest
+        {
+            Id = contestDTO.Id,
+            ContestName = contestDTO.ContestName,
+            Description = contestDTO.Description,
+            From = contestDTO.From,
+            Until = contestDTO.Until,
+            TotalHours = contestDTO.TotalHours,
+            ContestTypeId = contestDTO.ContestTypeId,
+            LocationId = contestDTO.LocationId,
+        };
 
-        UpdateContestWithUser(userId, contest.Contest);
+        UpdateContestWithUser(userId, contest);
         await Uow.SaveChangesAsync();
     }
 
-    public async Task<Contest> PostContest(Guid userId, ContestCreateModel contest)
+    public async Task<Contest> PostContest(Guid userId, CreateContestDTO createContestDto)
     {
-        contest.Contest.Id = Guid.NewGuid();
-        contest.Contest.From = contest.Contest.From.ToUniversalTime();
-        contest.Contest.Until = contest.Contest.Until.ToUniversalTime();
+        var contestId = Guid.NewGuid();
+        createContestDto.From = createContestDto.From.ToUniversalTime();
+        createContestDto.Until = createContestDto.Until.ToUniversalTime();
 
-        foreach (var levelId in contest.SelectedLevelIds!)
+        foreach (var levelId in createContestDto.SelectedLevelIds!)
         {
             var contestLevel = new App.DAL.DTO.ContestLevel
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestId,
                 LevelId = levelId
             };
             Uow.ContestLevels.Add(contestLevel);
@@ -174,7 +193,7 @@ public class ContestService :
         var gameTypes = new HashSet<Guid>();
         var allPackages = (await Uow.PackageGameTypeTimes.GetAllAsync(default)).ToList();
 
-        foreach (var id in contest.SelectedPackagesIds!)
+        foreach (var id in createContestDto.SelectedPackagesIds!)
         {
             var gameTypeId = allPackages
                 .FirstOrDefault(e => e.Id.Equals(id) && !gameTypes.Contains(e.GameTypeId))
@@ -190,35 +209,79 @@ public class ContestService :
         {
             var contestGameType = new App.DAL.DTO.ContestGameType()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestId,
                 GameTypeId = gameTypeId
             };
             Uow.ContestGameTypes.Add(contestGameType);
         }
 
-        foreach (var timeId in contest.SelectedTimesIds!)
+        foreach (var timeId in createContestDto.SelectedTimesIds!)
         {
             var timeOfDay = new App.DAL.DTO.ContestTime()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestId,
                 TimeId = timeId
             };
             Uow.ContestTimes.Add(timeOfDay);
         }
 
-        foreach (var packageId in contest.SelectedPackagesIds!)
+        foreach (var packageId in createContestDto.SelectedPackagesIds!)
         {
             var package = new App.DAL.DTO.ContestPackage()
             {
-                ContestId = contest.Contest.Id,
+                ContestId = contestId,
                 PackageGameTypeTimeId = packageId
             };
             Uow.ContestPackages.Add(package);
         }
+        
+        //Contest Roles by default
+        var trainerRole = new ContestRole()
+        {
+            ContestRoleName = "Trainer",
+            ContestId = contestId
+        };
 
-        var newContest = AddContestWithUser(userId, contest.Contest);
+        var participantRole = new DAL.DTO.ContestRole()
+        {
+            ContestRoleName = "Participant",
+            ContestId = contestId
+        };
+        Uow.ContestRoles.Add(participantRole);
+        Uow.ContestRoles.Add(trainerRole);
+
+        var contest = new Contest
+        {
+            Id = contestId,
+            ContestName = createContestDto.ContestName,
+            Description = createContestDto.Description,
+            From = createContestDto.From,
+            Until = createContestDto.Until,
+            TotalHours = createContestDto.TotalHours,
+            ContestTypeId = createContestDto.ContestTypeId,
+            LocationId = createContestDto.LocationId,
+        };
+
+
+        var newContest = AddContestWithUser(userId, contest);
         await Uow.SaveChangesAsync();
         return newContest;
+    }
+
+    public async Task<IEnumerable<OwnerContestsDTO>> GetOwnerContests(Guid userId)
+    {
+        var list =(await GetAllAsync()).Select(e => new OwnerContestsDTO
+        {
+            Id = e.Id,
+            ContestName = e.ContestName,
+            Description = e.Description,
+            TotalHours = e.TotalHours,
+            From = e.From,
+            Until = e.Until,
+            LocationName = e.Location!.LocationName,
+            ContestTypeName = e.ContestType!.ContestTypeName
+        }).ToList();
+        return list;
     }
 
     public App.BLL.DTO.Contest AddContestWithUser(Guid userId, App.BLL.DTO.Contest contest)

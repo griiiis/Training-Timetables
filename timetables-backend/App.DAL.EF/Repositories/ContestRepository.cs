@@ -1,5 +1,4 @@
 ﻿using App.Contracts.DAL.Repositories;
-using App.DAL.DTO.Models;
 using AutoMapper;
 using APPDomain = App.Domain;
 using DALDTO = App.DAL.DTO;
@@ -48,6 +47,8 @@ public class ContestRepository : BaseEntityRepository<APPDomain.Contest, DALDTO.
     {
         return (await CreateQuery()
                 .Include(e => e.UserContestPackages)
+                .Include(e => e.Location)
+                .Include(e => e.ContestType)
             .ToListAsync()).Where(e => e.UserContestPackages.
                 Any(a => a.AppUserId == userId))
             .Select(de => Mapper.Map(de));

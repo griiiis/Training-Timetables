@@ -16,7 +16,7 @@ public interface IUserContestPackageRepositoryCustom<TEntity>
     Task<IEnumerable<TEntity>> GetCurrentUserPackages(Guid userId);
     Task<IEnumerable<TEntity>> GetContestTeachers(Guid contestId);
     Task<IEnumerable<TEntity>> GetContestUsersWithoutTeachers(Guid contestId);
-    Task<IEnumerable<TEntity>> GetContestUsersWithoutTeachers(Guid contestId, Guid teamId);
+    Task<IEnumerable<TEntity>> GetContestTeammates(Guid contestId, Guid teamId);
     bool AnyTeams(Guid contestId);
     bool IfAlreadyJoined(Guid contestId, Guid userId);
 

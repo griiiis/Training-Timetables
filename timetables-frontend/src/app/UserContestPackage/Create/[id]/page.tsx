@@ -1,4 +1,5 @@
 "use client"
+import { IInformationContestDTO } from "@/domain/DTOs/Contests/IInformationContestDTO";
 import { IContest } from "@/domain/IContest";
 import { ILevel } from "@/domain/ILevel";
 import { IPackageGameTypeTime } from "@/domain/IPackageGameTypeTime";
@@ -6,7 +7,7 @@ import ContestService from "@/services/ContestService";
 import LevelService from "@/services/LevelService";
 import PackageGameTypeTimeService from "@/services/PackageGameTypeTimeService";
 import UserContestPackageService from "@/services/UserContestPackageService";
-import { IUserInfo } from "@/state/AppContext";
+import { IUserInfo } from "@/domain/Identity/IUserInfo";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ import { useEffect, useState } from "react";
 export default function Create() {
     let { id } = useParams();
     const router = useRouter();
-    const [contest, setContest] = useState<IContest>();
+    const [contest, setContest] = useState<IInformationContestDTO>();
     const [packages, setPackages] = useState<IPackageGameTypeTime[]>([]);
     const [levels, setLevels] = useState<ILevel[]>([]);
     const [selectedPackageId, setSelectedPackageId] = useState("");

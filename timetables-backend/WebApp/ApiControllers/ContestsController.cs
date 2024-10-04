@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Identity;
 using App.DTO.v1_0;
-using App.DTO.v1_0.Models.Contests;
+using App.DTO.v1_0.DTOs.Contests;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,8 +25,15 @@ namespace WebApp.ApiControllers
         private readonly IAppBLL _bll;
         private readonly UserManager<AppUser> _userManager;
         private readonly PublicDTOBllMapper<Contest, App.BLL.DTO.Contest> _mapper;
-        private readonly PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.Contests.ContestEditModel> _editModelMapper;
-        private readonly PublicDTOBllMapper<ContestCreateModel, App.BLL.DTO.Models.Contests.ContestCreateModel> _createModelMapper;
+
+        private readonly PublicDTOBllMapper<EditContestDTO, App.BLL.DTO.DTOs.Contests.EditContestDTO>
+            _editContestDTOMapper;
+
+        private readonly PublicDTOBllMapper<CreateContestDTO, App.BLL.DTO.DTOs.Contests.CreateContestDTO>
+            _createContestDTOMapper;
+
+        private readonly PublicDTOBllMapper<OwnerContestsDTO, App.BLL.DTO.DTOs.Contests.OwnerContestsDTO>
+            _ownerContestsDTOMapper;
 
         private Guid UserId => Guid.Parse(_userManager.GetUserId(User)!);
 
@@ -41,8 +48,12 @@ namespace WebApp.ApiControllers
             _bll = bll;
             _userManager = userManager;
             _mapper = new PublicDTOBllMapper<Contest, App.BLL.DTO.Contest>(autoMapper);
-            _editModelMapper = new PublicDTOBllMapper<ContestEditModel, App.BLL.DTO.Models.Contests.ContestEditModel>(autoMapper);
-            _createModelMapper = new PublicDTOBllMapper<ContestCreateModel, App.BLL.DTO.Models.Contests.ContestCreateModel>(autoMapper);
+            _editContestDTOMapper =
+                new PublicDTOBllMapper<EditContestDTO, App.BLL.DTO.DTOs.Contests.EditContestDTO>(autoMapper);
+            _createContestDTOMapper =
+                new PublicDTOBllMapper<CreateContestDTO, App.BLL.DTO.DTOs.Contests.CreateContestDTO>(autoMapper);
+            _ownerContestsDTOMapper =
+                new PublicDTOBllMapper<OwnerContestsDTO, App.BLL.DTO.DTOs.Contests.OwnerContestsDTO>(autoMapper);
         }
 
         /// <summary>
@@ -71,28 +82,148 @@ namespace WebApp.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<List<Contest>>> GetOwnerContests()
+        public async Task<ActionResult<List<OwnerContestsDTO>>> GetOwnerContests()
         {
-                var res = (await _bll.Contests.GetAllAsync(UserId))
-                    .Select(e => _mapper.Map(e)).ToList();
-                return Ok(res);
+            var res = (await _bll.Contests.GetOwnerContests(UserId))
+                .Select(e => _ownerContestsDTOMapper.Map(e)).ToList();
+            return Ok(res);
         }
 
         /// <summary>
-        /// Returns all contests visible to current user
+        /// Returns all contests visible to current user with all data
         /// </summary>
-        /// <returns>List of contests</returns>
+        /// <returns>List of contests for participant/trainer my contests</returns>
         [HttpGet("user")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [ProducesResponseType<IEnumerable<Contest>>((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<Contest>>> GetUserContests()
+        public async Task<ActionResult<MyContestsDTO>> GetUserContestsWithAllData()
         {
+            var currentContestsList = new List<UserContestsDTO>();
+            var comingContestsList = new List<UserContestsDTO>();
+
             var res = (await _bll.Contests.GetUserContests(UserId))
                 .Select(e => _mapper.Map(e)).ToList();
-            return Ok(res);
+
+            // Current contests
+            foreach (var contest in res.Where(e => e!.From < DateTime.Now && e.Until > DateTime.Now))
+            {
+                var userPackage = _bll.UserContestPackages.GetUserContestPackage(contest!.Id, UserId).Result;
+                var ifTrainer = _bll.ContestUserRoles.IfContestTrainer(UserId, contest.Id);
+                var currentContestsDTO = new UserContestsDTO
+                {
+                    ContestId = contest!.Id,
+                    ContestName = contest.ContestName,
+                    Description = contest.Description,
+                    TotalHours = contest.TotalHours,
+                    From = contest.From,
+                    Until = contest.Until,
+                    LocationName = contest.Location!.LocationName,
+                    ContestTypeName = contest.ContestType!.ContestTypeName,
+                    AnyGames = _bll.Games.AnyContestGames(contest.Id),
+                    TeamId = userPackage!.TeamId,
+                    IfTrainer = ifTrainer,
+                };
+                if (ifTrainer)
+                {
+                    currentContestsDTO.GameTypesDTOs = _bll.GameTypes.GetAllCurrentContestAsync(contest.Id).Result
+                        .Select(e => new GameTypesDTO
+                        {
+                            GameTypeId = e.Id,
+                            GameTypeName = e.GameTypeName
+                        }).ToList();
+
+                    currentContestsDTO.RolePreferenceDTOs = _bll.RolePreferences.GetAllAsync(UserId).Result
+                        .Select(e => new RolePreferenceDTO
+                        {
+                            GameTypeId = e.GameTypeId,
+                            GameTypeName = e.GameType!.GameTypeName,
+                            LevelTitle = e.Level!.Title
+                        }).ToList();
+                }
+                else
+                {
+                    var teamMates = _bll.UserContestPackages.GetContestTeammates(contest.Id, userPackage!.TeamId).Result
+                        .Select(e =>
+                            new UserPackagesDTO
+                            {
+                                PackageId = e.Id,
+                                FirstName = e.AppUser!.FirstName,
+                                LastName = e.AppUser.LastName
+                            }).ToList();
+                    
+                    currentContestsDTO.LevelTitle = userPackage.Level!.Title;
+                    currentContestsDTO.GameTypeName = userPackage.PackageGameTypeTime!.GameType!.GameTypeName;
+                    currentContestsDTO.PackageName = userPackage.PackageGameTypeTime.PackageGtName;
+                    currentContestsDTO.PackagesDTOs = teamMates;
+                }
+
+                currentContestsList.Add(currentContestsDTO);
+            }
+
+            foreach (var contest in res.Where(e => e!.From > DateTime.Now))
+            {
+                var userPackage = _bll.UserContestPackages.GetUserContestPackage(contest!.Id, UserId).Result;
+                var ifTrainer = _bll.ContestUserRoles.IfContestTrainer(UserId, contest.Id);
+                
+                var comingContestsDTO = new UserContestsDTO
+                {
+                    ContestId = contest!.Id,
+                    ContestName = contest.ContestName,
+                    Description = contest.Description,
+                    TotalHours = contest.TotalHours,
+                    From = contest.From,
+                    Until = contest.Until,
+                    LocationName = contest.Location!.LocationName,
+                    ContestTypeName = contest.ContestType!.ContestTypeName,
+                    AnyGames = _bll.Games.AnyContestGames(contest.Id),
+                    TeamId = userPackage!.TeamId,
+                    IfTrainer = ifTrainer,
+                };
+                if (ifTrainer)
+                {
+                    comingContestsDTO.GameTypesDTOs = _bll.GameTypes.GetAllCurrentContestAsync(contest.Id).Result
+                        .Select(e => new GameTypesDTO
+                        {
+                            GameTypeId = e.Id,
+                            GameTypeName = e.GameTypeName
+                        }).ToList();
+
+                    comingContestsDTO.RolePreferenceDTOs = _bll.RolePreferences.GetAllAsync(UserId).Result
+                        .Select(e => new RolePreferenceDTO
+                        {
+                            GameTypeId = e.GameTypeId,
+                            GameTypeName = e.GameType!.GameTypeName,
+                            LevelTitle = e.Level!.Title
+                        }).ToList();
+                }
+                else
+                {
+                    var teamMates = _bll.UserContestPackages.GetContestTeammates(contest.Id, userPackage!.TeamId).Result
+                        .Select(e =>
+                            new UserPackagesDTO
+                            {
+                                PackageId = e.Id,
+                                FirstName = e.AppUser!.FirstName,
+                                LastName = e.AppUser.LastName
+                            }).ToList();
+                    comingContestsDTO.LevelTitle = userPackage.Level!.Title;
+                    comingContestsDTO.GameTypeName = userPackage.PackageGameTypeTime!.GameType!.GameTypeName;
+                    comingContestsDTO.PackageName = userPackage.PackageGameTypeTime.PackageGtName;
+                    comingContestsDTO.PackagesDTOs = teamMates;
+                }
+                comingContestsList.Add(comingContestsDTO);
+            }
+
+            var myContestsDTO = new MyContestsDTO
+            {
+                CurrentContestsDTO = currentContestsList,
+                ComingContestsDTO = comingContestsList
+            };
+
+            return Ok(myContestsDTO);
         }
 
         /// <summary>
@@ -105,7 +236,7 @@ namespace WebApp.ApiControllers
         [Consumes("application/json")]
         [ProducesResponseType<Contest>((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<Contest>> GetContest(Guid id)
+        public async Task<ActionResult<InformationContestDTO>> GetContest(Guid id)
         {
             var contest = _mapper.Map(await _bll.Contests.FirstOrDefaultAsync(id));
 
@@ -114,7 +245,19 @@ namespace WebApp.ApiControllers
                 return NotFound();
             }
 
-            return Ok(contest);
+            var contestDTO = new InformationContestDTO
+            {
+                Id = contest.Id,
+                ContestName = contest.ContestName,
+                Description = contest.Description,
+                TotalHours = contest.TotalHours,
+                From = contest.From,
+                Until = contest.Until,
+                LocationName = contest.Location!.LocationName,
+                ContestTypeName = contest.ContestType!.ContestTypeName
+            };
+
+            return Ok(contestDTO);
         }
 
         /// <summary>
@@ -129,7 +272,7 @@ namespace WebApp.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<Contest>> GetContestById(Guid id)
+        public async Task<ActionResult<DeleteContestDTO>> GetOwnerContest(Guid id)
         {
             if (!_bll.Contests.IsContestOwnedByUser(UserId, id))
             {
@@ -143,7 +286,19 @@ namespace WebApp.ApiControllers
                 return NotFound();
             }
 
-            return Ok(contest);
+            var deleteContestDTO = new DeleteContestDTO
+            {
+                Id = contest.Id,
+                ContestName = contest.ContestName,
+                Description = contest.Description,
+                TotalHours = contest.TotalHours,
+                From = contest.From,
+                Until = contest.Until,
+                LocationName = contest.Location!.LocationName,
+                ContestTypeName = contest.ContestType!.ContestTypeName
+            };
+
+            return Ok(deleteContestDTO);
         }
 
         [HttpGet("owner/edit/{id:guid}")]
@@ -153,7 +308,7 @@ namespace WebApp.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<ContestEditModel>> EditContest(Guid id)
+        public async Task<ActionResult<EditContestDTO>> EditContest(Guid id)
         {
             if (!_bll.Contests.IsContestOwnedByUser(UserId, id))
             {
@@ -167,8 +322,8 @@ namespace WebApp.ApiControllers
                 return NotFound();
             }
 
-            var vm = _editModelMapper.Map(await _bll.Contests.GetContestEditModel(UserId, id));
-            
+            var vm = _editContestDTOMapper.Map(await _bll.Contests.GetContestEditModel(UserId, id));
+
             return Ok(vm);
         }
 
@@ -176,9 +331,9 @@ namespace WebApp.ApiControllers
         /// Edit user's contest
         /// </summary>
         /// <param name="id">Contest Id</param>
-        /// <param name="contest">Contest</param>
+        /// <param name="editContestDto">Contest DTO</param>
         /// <returns></returns>
-        [HttpPut("owner/{id:guid}")]
+        [HttpPut("{id:guid}")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -186,17 +341,16 @@ namespace WebApp.ApiControllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<IActionResult> PutContest(Guid id, ContestEditModel contest)
+        public async Task<IActionResult> PutContest(Guid id, EditContestDTO editContestDto)
         {
-            
-            if (id != contest.Contest.Id)
+            if (id != editContestDto.Id)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _bll.Contests.PutContest(UserId, id, _editModelMapper.Map(contest));
+                await _bll.Contests.PutContest(UserId, id, _editContestDTOMapper.Map(editContestDto));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -224,15 +378,15 @@ namespace WebApp.ApiControllers
         [ProducesResponseType<Contest>((int)HttpStatusCode.Created)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<Contest>> PostContest(ContestCreateModel contest)
+        public async Task<ActionResult<Contest>> PostContest(CreateContestDTO createContestDTO)
         {
-            if (contest.SelectedLevelIds!.Count < 1 || contest.SelectedTimesIds!.Count < 1 ||
-                contest.SelectedPackagesIds!.Count < 1)
+            if (createContestDTO.SelectedLevelIds!.Count < 1 || createContestDTO.SelectedTimesIds!.Count < 1 ||
+                createContestDTO.SelectedPackagesIds!.Count < 1)
             {
                 return NotFound("Required forms not filled!");
             }
-            
-            var newContest = await _bll.Contests.PostContest(UserId, _createModelMapper.Map(contest));
+
+            var newContest = await _bll.Contests.PostContest(UserId, _createContestDTOMapper.Map(createContestDTO));
 
             return CreatedAtAction("GetContest", new
             {
@@ -246,7 +400,7 @@ namespace WebApp.ApiControllers
         /// </summary>
         /// <param name="id">Contest Id</param>
         /// <returns></returns>
-        [HttpDelete("owner/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
@@ -290,6 +444,12 @@ namespace WebApp.ApiControllers
             foreach (var times in _bll.ContestTimes.GetAllAsync().Result.Where(e => e.ContestId.Equals(contest.Id)))
             {
                 await _bll.ContestTimes.RemoveAsync(times);
+            }
+
+            //Remove contest roles
+            foreach (var role in _bll.ContestRoles.GetAllAsync().Result.Where(e => e.ContestId.Equals(contest.Id)))
+            {
+                await _bll.ContestRoles.RemoveAsync(role);
             }
 
             await _bll.Contests.RemoveAsync(contest);

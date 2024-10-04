@@ -26,7 +26,7 @@ namespace WebApp.ApiControllers
         private readonly IAppBLL _bll;
         private readonly UserManager<AppUser> _userManager;
         private readonly PublicDTOBllMapper<App.DTO.v1_0.Game, Game> _mapper;
-        private readonly PublicDTOBllMapper<App.DTO.v1_0.CreateGamesData, CreateGamesData> _mapperData;
+        private readonly PublicDTOBllMapper<App.DTO.v1_0.DTOs.CreateGamesData, CreateGamesData> _mapperData;
         private Guid UserId => Guid.Parse(_userManager.GetUserId(User)!);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace WebApp.ApiControllers
             _bll = bll;
             _userManager = userManager;
             _mapper = new PublicDTOBllMapper<App.DTO.v1_0.Game, Game>(autoMapper);
-            _mapperData = new PublicDTOBllMapper<App.DTO.v1_0.CreateGamesData, CreateGamesData>(autoMapper);
+            _mapperData = new PublicDTOBllMapper<App.DTO.v1_0.DTOs.CreateGamesData, CreateGamesData>(autoMapper);
         }
         
         /// <summary>
@@ -121,9 +121,9 @@ namespace WebApp.ApiControllers
         [HttpPost("{contestId:guid}")]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType<App.DTO.v1_0.CreateGamesData>((int) HttpStatusCode.Created)]
+        [ProducesResponseType<App.DTO.v1_0.DTOs.CreateGamesData>((int) HttpStatusCode.Created)]
         [Authorize(Roles = "Contest Admin")]
-        public async Task<ActionResult<App.DTO.v1_0.CreateGamesData>> PostGame(App.DTO.v1_0.CreateGamesData gamesData, Guid contestId)
+        public async Task<ActionResult<App.DTO.v1_0.DTOs.CreateGamesData>> PostGame(App.DTO.v1_0.DTOs.CreateGamesData gamesData, Guid contestId)
         {
             _bll.Games.CreateGames(_mapperData.Map(gamesData), contestId);
             await _bll.SaveChangesAsync();

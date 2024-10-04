@@ -45,7 +45,8 @@ public class UserContestPackageRepository :
             .Include(u => u.AppUser)
             .Include(c => c.Contest)
             .Include(u => u.PackageGameTypeTime)
-            .ThenInclude(g => g!.GameType).Where(e => e.ContestId.Equals(contestId))
+            .ThenInclude(g => g!.GameType)
+            .Where(e => e.ContestId.Equals(contestId))
             .FirstOrDefaultAsync());
     }
 
@@ -106,7 +107,7 @@ public class UserContestPackageRepository :
             .ToListAsync()).Select(de => Mapper.Map(de));
     }
     
-    public async Task<IEnumerable<DALDTO.UserContestPackage>> GetContestUsersWithoutTeachers(Guid contestId,
+    public async Task<IEnumerable<DALDTO.UserContestPackage>> GetContestTeammates(Guid contestId,
         Guid teamId)
     {
         var rolePreferencesAppUserIds = await CreateQuery().SelectMany(e => e.PackageGameTypeTime!.GameType!.RolePreferences.Where(e => e.ContestId.Equals(contestId))).Select(e => e.AppUserId).ToListAsync();
@@ -114,7 +115,8 @@ public class UserContestPackageRepository :
         return (await CreateQuery()
             .Include(e => e.AppUser)
             .Where(e => e.ContestId == contestId &&
-                        e.TeamId == teamId && !rolePreferencesAppUserIds.Contains(e.AppUserId))
+                        e.TeamId == teamId && 
+                        !rolePreferencesAppUserIds.Contains(e.AppUserId))
             .ToListAsync()).Select(de => Mapper.Map(de));
     }
 

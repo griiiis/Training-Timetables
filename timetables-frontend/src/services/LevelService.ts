@@ -14,27 +14,22 @@ export default class LevelService extends BaseService {
     }
 
     static async getCurrentContestLevels(contestId: string): Promise<IResultObject<ILevel[]>> {
-        return await this.get<ILevel[]>(`Levels/${contestId}`);
-    }
+        return await this.get<ILevel[]>(`Levels/contest/${contestId}`);
+    }   
 
-    //kasutan
-    static async getLevelForAll(LevelId : string): Promise<IResultObject<ILevel>> {
-        return await this.get<ILevel>(`Levels/level/${LevelId}`);
-    }
-    //kasutan
     static async getLevel(LevelId : string): Promise<IResultObject<ILevel>> {
-        return await this.get<ILevel>(`Levels/owner/${LevelId}`);
+        return await this.get<ILevel>(`Levels/${LevelId}`);
     }
 
     static async postLevel(data: object): Promise<IResultObject<ILevel>> {
         return await this.post<ILevel>(`Levels`, data);
     }
 
-    static async deleteLevel(LevelId: string): Promise<IResultObject<ILevel>> {
-        return await this.delete<ILevel>(`Levels/${LevelId}`);
-    }
-
     static async putLevel(LevelId: string, data: object): Promise<IResultObject<ILevel>> {
         return await this.put<ILevel>(`Levels/${LevelId}`, data);
+    }
+
+    static async deleteLevel(LevelId: string): Promise<IResultObject<ILevel>> {
+        return await this.delete<ILevel>(`Levels/${LevelId}`);
     }
 }
