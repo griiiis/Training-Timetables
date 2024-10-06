@@ -99,4 +99,7 @@ public class AppBll: BaseBLL<AppDbContext> ,IAppBLL
     
     private IContestUserRoleService? _contestUserRoles;
     public IContestUserRoleService ContestUserRoles => _contestUserRoles ??= new ContestUserRoleService(_uow,_uow.ContestUserRoles, _mapper);
+    
+    private IInvitationService? _invitations;
+    public IInvitationService Invitations => _invitations ?? new InvitationService(_uow,_uow.Invitations, _mapper);
 }

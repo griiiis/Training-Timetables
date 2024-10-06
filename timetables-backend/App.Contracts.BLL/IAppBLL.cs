@@ -28,4 +28,5 @@ public interface IAppBLL : IBLL
     IAppUserService AppUsers { get; }
     IContestRoleService ContestRoles { get; }
     IContestUserRoleService ContestUserRoles { get; }
+    IInvitationService Invitations { get; }
 }

@@ -29,4 +29,5 @@ public interface IAppUnitOfWork : IUnitOfWork
     IAppUserRepository AppUsers { get; }
     IContestRoleRepository ContestRoles { get; }
     IContestUserRoleRepository ContestUserRoles { get; }
+    IInvitationRepository Invitations { get; }
 }

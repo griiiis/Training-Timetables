@@ -106,4 +106,8 @@ public class AppUnitOfWork : BaseUnitOfWork<AppDbContext>, IAppUnitOfWork
     
     private IContestUserRoleRepository? _contestUserRoles;
     public IContestUserRoleRepository ContestUserRoles => _contestUserRoles ??= new ContestUserRoleRepository(UowDbContext, _mapper);
+
+    private IInvitationRepository? _invitations;
+
+    public IInvitationRepository Invitations => _invitations ?? new InvitationRepository(UowDbContext, _mapper);
 }

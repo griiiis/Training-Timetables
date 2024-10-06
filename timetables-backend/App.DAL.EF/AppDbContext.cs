@@ -35,6 +35,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
 
     public DbSet<ContestUserRole> ContestUserRoles { get; set; } = default!;
     public DbSet<ContestRole> ContestRoles { get; set; } = default!;
+    public DbSet<Invitation> Invitations { get; set; } = default!;
     
     public AppDbContext(DbContextOptions options) : base(options)
     {
